@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting</title>
+    <script>
+      const pathname = window.location.pathname || "/";
+      let redirectPath = "/frontend/index.html";
+
+      if (pathname.endsWith(".html") && !pathname.startsWith("/frontend/")) {
+        redirectPath = "/frontend" + pathname;
+      }
+
+      const target = redirectPath + window.location.search + window.location.hash;
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

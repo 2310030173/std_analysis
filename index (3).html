@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DataVault — Enterprise Store Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#080c14;--bg2:#0d1220;--bg3:#111827;--bg4:#1a2235;
+  --card:#141c2e;--card2:#1e2a40;--border:#1f2d47;--border2:#263552;
+  --text:#e8edf5;--text2:#94a3b8;--text3:#64748b;
+  --accent:#3b82f6;--accent2:#60a5fa;--accent3:#93c5fd;
+  --green:#10b981;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6;--pink:#ec4899;--teal:#14b8a6;
+  --amazon:#ff9900;--flipkart:#2874f0;--myntra:#ff3e6c;--ajio:#1d1d1b;--meesho:#9b2d8e;--nykaa:#fc2779;
+  --glow:rgba(59,130,246,0.15);--shadow:0 4px 24px rgba(0,0,0,0.4);
+  --r:12px;--r2:8px;--r3:16px;
+  font-size:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* LOGIN PAGE */
+#loginPage{display:flex;min-height:100vh;position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(59,130,246,0.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(139,92,246,0.06) 0%,transparent 50%),var(--bg);}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.3;}
+.login-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px;position:relative;z-index:2;}
+.login-right{width:480px;display:flex;align-items:center;justify-content:center;padding:40px;position:relative;z-index:2;}
+.brand-mark{display:flex;align-items:center;gap:12px;margin-bottom:48px;}
+.brand-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:12px;display:grid;place-items:center;font-size:22px;}
+.brand-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.brand-sub{font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+.hero-title{font-size:52px;font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:20px;}
+.hero-title span{background:linear-gradient(135deg,var(--accent2),var(--purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-desc{color:var(--text2);font-size:16px;line-height:1.7;max-width:440px;margin-bottom:40px;}
+.stat-chips{display:flex;gap:12px;flex-wrap:wrap;}
+.stat-chip{background:var(--card);border:1px solid var(--border);padding:10px 18px;border-radius:100px;font-size:12px;color:var(--text2);}
+.stat-chip strong{color:var(--text);margin-right:6px;}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r3);padding:40px;width:100%;max-width:400px;}
+.login-card h2{font-size:26px;font-weight:700;margin-bottom:6px;}
+.login-card p{color:var(--text3);margin-bottom:32px;font-size:13px;}
+.form-group{margin-bottom:20px;}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px;display:block;letter-spacing:.5px;text-transform:uppercase;}
+.form-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r2);padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s;}
+.form-input:focus{border-color:var(--accent);}
+.demo-creds{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:var(--r2);padding:12px;margin-bottom:20px;font-size:12px;color:var(--text2);}
+.demo-creds strong{color:var(--accent2);}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--accent),var(--purple));border:none;border-radius:var(--r2);padding:14px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;letter-spacing:.3px;}
+.btn-primary:hover{opacity:.9;}
+.btn-primary:active{transform:scale(.99);}
+
+/* APP SHELL */
+#appShell{display:none;height:100vh;overflow:hidden;}
+.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;}
+.sidebar-logo{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sidebar-logo .ico{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
+.sidebar-logo .lname{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+.sidebar-logo .ltag{font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px;}
+.nav-section{margin-bottom:24px;}
+.nav-section-label{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;padding:0 12px;margin-bottom:8px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;transition:all .15s;color:var(--text2);font-size:13.5px;font-weight:500;position:relative;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{background:rgba(59,130,246,.12);color:var(--accent2);}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0;}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;padding:2px 7px;border-radius:100px;font-weight:700;}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r2);}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:grid;place-items:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}
+.user-role{font-size:11px;color:var(--text3);}
+.logout-btn{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:4px;}
+.logout-btn:hover{color:var(--red);}
+
+.main-area{margin-left:260px;height:100vh;overflow-y:auto;overflow-x:hidden;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50;}
+.page-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.search-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:8px 14px;display:flex;align-items:center;gap:8px;color:var(--text3);}
+.search-bar input{background:none;border:none;outline:none;color:var(--text);width:200px;font-family:'DM Sans',sans-serif;font-size:13px;}
+.topbar-chip{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:7px 14px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;}
+.topbar-chip:hover{border-color:var(--accent);}
+
+.page-content{padding:24px 28px;}
+.hidden{display:none!important;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;}
+.card-sm{padding:16px;}
+.card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:0 var(--r) 0 100%;opacity:.07;}
+.kpi-card.blue::before{background:var(--accent);}
+.kpi-card.green::before{background:var(--green);}
+.kpi-card.amber::before{background:var(--amber);}
+.kpi-card.purple::before{background:var(--purple);}
+.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+.kpi-change{font-size:12px;display:flex;align-items:center;gap:4px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+.kpi-icon{position:absolute;top:18px;right:18px;font-size:22px;opacity:.5;}
+
+/* GRID LAYOUTS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+.col-span-2{grid-column:span 2;}
+.col-span-3{grid-column:span 3;}
+
+/* COMPANY CARDS */
+.company-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.company-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow);}
+.company-card.selected{border-color:var(--accent)!important;box-shadow:0 0 0 1px var(--accent),var(--shadow);}
+.company-logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:-.3px;color:#fff;margin-bottom:12px;}
+.company-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
+.company-gmv{font-size:22px;font-weight:700;font-family:'Syne',sans-serif;margin:8px 0 4px;}
+.company-meta{font-size:11px;color:var(--text3);}
+.company-bar{height:3px;border-radius:2px;margin-top:12px;position:relative;background:var(--bg3);}
+.company-bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:hover{background:rgba(255,255,255,.02);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:12px 14px;font-size:13px;color:var(--text2);}
+td.bold{color:var(--text);font-weight:600;}
+td.mono{font-family:monospace;letter-spacing:.3px;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;}
+.badge-green{background:rgba(16,185,129,.12);color:var(--green);}
+.badge-red{background:rgba(239,68,68,.1);color:var(--red);}
+.badge-amber{background:rgba(245,158,11,.1);color:var(--amber);}
+.badge-blue{background:rgba(59,130,246,.1);color:var(--accent2);}
+.badge-purple{background:rgba(139,92,246,.1);color:var(--purple);}
+
+/* PRODUCTS GRID */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s;}
+.product-card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:var(--shadow);}
+.product-img{width:100%;height:160px;object-fit:cover;background:var(--bg3);}
+.product-body{padding:14px;}
+.product-name{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.4;}
+.product-cat{font-size:11px;color:var(--text3);margin-bottom:8px;}
+.product-price{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.product-mrp{font-size:12px;color:var(--text3);text-decoration:line-through;margin-left:6px;}
+.product-offer{font-size:11px;color:var(--green);margin-left:6px;}
+.product-rating{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--text2);}
+.stars{color:var(--amber);}
+
+/* CHART CONTAINERS */
+.chart-wrap{position:relative;width:100%;}
+.chart-wrap canvas{max-width:100%;}
+
+/* SEASON BADGES */
+.season-pill{padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.season-pill.active,.season-pill:hover{border-color:var(--accent);background:rgba(59,130,246,.1);color:var(--accent2);}
+.season-pill:not(.active){background:var(--bg3);color:var(--text3);border-color:var(--border);}
+
+/* OFFERS TABLE */
+.offer-row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:var(--r2);background:var(--bg3);margin-bottom:8px;border:1px solid var(--border);}
+.offer-badge{width:42px;height:42px;border-radius:9px;display:grid;place-items:center;font-size:18px;flex-shrink:0;}
+.offer-info{flex:1;}
+.offer-title{font-size:13.5px;font-weight:600;margin-bottom:2px;}
+.offer-meta{font-size:11px;color:var(--text3);}
+.offer-discount{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);}
+
+/* COMPARISON */
+.compare-header{display:grid;grid-template-columns:180px repeat(6,1fr);gap:0;background:var(--card);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;overflow:hidden;}
+.compare-company{padding:16px;text-align:center;border-right:1px solid var(--border);}
+.compare-company:last-child{border-right:none;}
+.compare-logo-sm{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;font-size:9px;font-weight:800;color:#fff;margin:0 auto 6px;}
+.compare-body{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);overflow:hidden;}
+.compare-row{display:grid;grid-template-columns:180px repeat(6,1fr);border-bottom:1px solid var(--border);}
+.compare-row:last-child{border-bottom:none;}
+.compare-label{padding:14px 16px;font-size:12px;color:var(--text3);font-weight:500;background:var(--bg3);border-right:1px solid var(--border);}
+.compare-val{padding:14px;text-align:center;font-size:13px;font-weight:600;border-right:1px solid var(--border);}
+.compare-val:last-child{border-right:none;}
+.compare-bar-wrap{padding:12px;display:flex;align-items:center;}
+.compare-mini-bar{height:6px;border-radius:3px;transition:width .8s;}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--r2);padding:4px;width:fit-content;margin-bottom:20px;}
+.tab{padding:8px 18px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--text3);font-weight:500;transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif;}
+.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.tab:hover:not(.active){color:var(--text2);}
+
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.filter-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;outline:none;}
+.filter-select:focus{border-color:var(--accent);}
+.filter-label{font-size:12px;color:var(--text3);}
+
+/* PAYMENT CARDS */
+.payment-method-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:14px;}
+.pm-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.pm-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.pm-count{font-size:12px;color:var(--text3);}
+.pm-amount{margin-left:auto;text-align:right;}
+.pm-amount .val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+.pm-amount .pct{font-size:11px;color:var(--text3);}
+
+/* SCROLLING TICKER */
+.ticker{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 0;overflow:hidden;position:relative;}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent);}
+.ticker::after{right:0;background:linear-gradient(-90deg,var(--bg2),transparent);}
+.ticker-inner{display:flex;gap:40px;animation:ticker 30s linear infinite;width:max-content;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);white-space:nowrap;}
+.ticker-item .tick-val{color:var(--text2);font-weight:600;}
+.ticker-item .tick-up{color:var(--green);}
+.ticker-item .tick-down{color:var(--red);}
+
+/* SPARKLINE */
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:28px;}
+.spark-bar{border-radius:2px 2px 0 0;background:var(--accent);opacity:.6;flex:1;transition:height .3s;}
+
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .35s ease both;}
+.fade-up-2{animation:fadeUp .35s .07s ease both;}
+.fade-up-3{animation:fadeUp .35s .14s ease both;}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.grid-6{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.main-area{margin-left:0}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.login-left{display:none}.login-right{width:100%}.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr}}
+
+/* DONUT LEGEND */
+.legend-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:12px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-val{margin-left:auto;font-weight:600;color:var(--text);}
+
+/* PROGRESS BARS */
+.progress-row{margin-bottom:12px;}
+.progress-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;}
+.progress-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+/* NOTIFICATION DOT */
+.notif-dot{width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg2);}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOGIN PAGE ═══════════════════ -->
+<div id="loginPage">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+
+  <div class="login-left">
+    <div class="brand-mark">
+      <div class="brand-icon">📊</div>
+      <div>
+        <div class="brand-name">DataVault</div>
+        <div class="brand-sub">Enterprise Analytics</div>
+      </div>
+    </div>
+    <div class="hero-title">Intelligent<br/><span>Store Analytics</span><br/>Platform</div>
+    <p class="hero-desc">Real-time insights across Amazon, Flipkart, Myntra, Ajio, Meesho & Nykaa. Track GMV, orders, offers, seasonality, and competitive intelligence — all in one place.</p>
+    <div class="stat-chips">
+      <div class="stat-chip"><strong>₹4.2Cr+</strong> Daily GMV Tracked</div>
+      <div class="stat-chip"><strong>6</strong> Major Platforms</div>
+      <div class="stat-chip"><strong>1,200+</strong> Products Indexed</div>
+      <div class="stat-chip"><strong>99.8%</strong> Uptime</div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Welcome back 👋</h2>
+      <p>Sign in to your analytics workspace</p>
+      <div class="demo-creds">
+        <strong>Demo:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f293969f9b9cb2969386938493879e86dc9b9c">[email&#160;protected]</a> / <strong>password123</strong>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginEmail">Email Address</label>
+        <input id="loginEmail" class="form-input" type="email" value="admin@datavault.in" placeholder="you@company.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPass">Password</label>
+        <input id="loginPass" class="form-input" type="password" value="password123" placeholder="••••••••"/>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Sign In to Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP SHELL ═══════════════════ -->
+<div id="appShell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="ico">📊</div>
+      <div>
+        <div class="lname">DataVault</div>
+        <div class="ltag">Analytics</div>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <button type="button" class="nav-item active" onclick="showPage('dashboard',this)">
+          <span class="nav-icon">🏠</span> Dashboard
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('analytics',this)">
+          <span class="nav-icon">📈</span> Analytics
+        </button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Commerce</div>
+        <button type="button" class="nav-item" onclick="showPage('companies',this)">
+          <span class="nav-icon">🏢</span> Companies
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('products',this)">
+          <span class="nav-icon">📦</span> Products
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('orders',this)">
+          <span class="nav-icon">🛒</span> Orders
+          <span class="nav-badge">24</span>
+        </button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Intelligence</div>
+        <button type="button" class="nav-item" onclick="showPage('seasonal',this)">
+          <span class="nav-icon">🌦</span> Seasonal Insights
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('offers',this)">
+          <span class="nav-icon">🏷</span> Offer Analysis
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('payments',this)">
+          <span class="nav-icon">💳</span> Payments
+        </button>
+        <button type="button" class="nav-item" onclick="showPage('compare',this)">
+          <span class="nav-icon">⚖️</span> Comparison
+        </button>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">A</div>
+        <div>
+          <div class="user-name">Arjun Sharma</div>
+          <div class="user-role">Analytics Admin</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()" title="Logout">⬅</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Area -->
+  <div class="main-area">
+    <!-- Ticker -->
+    <div class="ticker">
+      <div class="ticker-inner" id="tickerInner"></div>
+    </div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-right">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="Search products, companies…"/>
+        </div>
+        <div class="topbar-chip">📅 Apr 2025</div>
+        <div class="topbar-chip" xstyle="position:relative">
+          🔔 <div class="notif-dot" xstyle="position:absolute;top:6px;right:6px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pages -->
+    <div class="page-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="page-dashboard" class="fade-up">
+        <div class="kpi-grid">
+          <div class="kpi-card blue fade-up">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-label">Total GMV (MTD)</div>
+            <div class="kpi-value" xstyle="color:var(--accent2)">₹84.6Cr</div>
+            <div class="kpi-change up">▲ 18.4% vs last month</div>
+          </div>
+          <div class="kpi-card green fade-up-2">
+            <div class="kpi-icon">📦</div>
+            <div class="kpi-label">Total Orders</div>
+            <div class="kpi-value" xstyle="color:var(--green)">3,24,819</div>
+            <div class="kpi-change up">▲ 12.1% vs last month</div>
+          </div>
+          <div class="kpi-card amber fade-up-3">
+            <div class="kpi-icon">🛍</div>
+            <div class="kpi-label">Avg Order Value</div>
+            <div class="kpi-value" xstyle="color:var(--amber)">₹2,607</div>
+            <div class="kpi-change up">▲ 5.6% vs last month</div>
+          </div>
+          <div class="kpi-card purple fade-up">
+            <div class="kpi-icon">💸</div>
+            <div class="kpi-label">Active Offers</div>
+            <div class="kpi-value" xstyle="color:var(--purple)">1,847</div>
+            <div class="kpi-change down">▼ 3.2% vs last month</div>
+          </div>
+        </div>
+
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>GMV Trend — Last 12 Months</div>
+            <div class="chart-wrap" xstyle="height:220px"><canvas id="gmvTrendChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--purple)"></div>Platform Share</div>
+            <div xstyle="display:flex;gap:20px;align-items:center;height:220px;">
+              <div class="chart-wrap" xstyle="width:180px;flex-shrink:0"><canvas id="platformShareChart"></canvas></div>
+              <ul class="legend-list" xstyle="flex:1" id="platformLegend"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--green)"></div>Top Categories</div>
+            <div class="chart-wrap" xstyle="height:180px"><canvas id="categoryChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--amber)"></div>Order Status Mix</div>
+            <div class="chart-wrap" xstyle="height:180px"><canvas id="orderStatusChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--teal)"></div>Return Rate %</div>
+            <div class="chart-wrap" xstyle="height:180px"><canvas id="returnRateChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><div class="dot" xstyle="background:var(--green)"></div>Recent High-Value Orders</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Order ID</th><th>Company</th><th>Customer</th><th>Category</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="recentOrdersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANALYTICS ── -->
+      <div id="page-analytics" class="hidden fade-up">
+        <div class="kpi-grid">
+          <div class="kpi-card blue"><div class="kpi-icon">📊</div><div class="kpi-label">Conversion Rate</div><div class="kpi-value" xstyle="color:var(--accent2)">3.84%</div><div class="kpi-change up">▲ 0.42pp</div></div>
+          <div class="kpi-card green"><div class="kpi-icon">👥</div><div class="kpi-label">Unique Customers</div><div class="kpi-value" xstyle="color:var(--green)">2,14,560</div><div class="kpi-change up">▲ 9.3%</div></div>
+          <div class="kpi-card amber"><div class="kpi-icon">🔁</div><div class="kpi-label">Repeat Rate</div><div class="kpi-value" xstyle="color:var(--amber)">41.2%</div><div class="kpi-change up">▲ 2.8pp</div></div>
+          <div class="kpi-card purple"><div class="kpi-icon">⏱</div><div class="kpi-label">Avg Delivery Days</div><div class="kpi-value" xstyle="color:var(--purple)">2.4</div><div class="kpi-change down">▼ 0.3 days</div></div>
+        </div>
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Weekly Orders by Platform</div>
+            <div class="chart-wrap" xstyle="height:240px"><canvas id="weeklyOrdersChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--pink)"></div>Revenue by Category</div>
+            <div class="chart-wrap" xstyle="height:240px"><canvas id="revByCatChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot" xstyle="background:var(--teal)"></div>Customer Acquisition Funnel</div>
+          <div id="funnelViz" xstyle="padding:20px 0"></div>
+        </div>
+      </div>
+
+      <!-- ── COMPANIES ── -->
+      <div id="page-companies" class="hidden fade-up">
+        <div class="grid-6" xstyle="margin-bottom:24px" id="companyCardsGrid"></div>
+        <div class="card" id="companyDetailPanel">
+          <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Company Deep-Dive — <span id="selectedCompanyName">Select a company above</span></div>
+          <div id="companyDetailContent" xstyle="color:var(--text3);font-size:13px">Click any company card to explore detailed metrics.</div>
+        </div>
+      </div>
+
+      <!-- ── PRODUCTS ── -->
+      <div id="page-products" class="hidden fade-up">
+        <div class="filter-bar">
+          <span class="filter-label">Platform:</span>
+          <select class="filter-select" id="productPlatformFilter" onchange="renderProducts()">
+            <option value="all">All Platforms</option>
+            <option value="Amazon">Amazon</option>
+            <option value="Flipkart">Flipkart</option>
+            <option value="Myntra">Myntra</option>
+            <option value="Ajio">Ajio</option>
+            <option value="Meesho">Meesho</option>
+            <option value="Nykaa">Nykaa</option>
+          </select>
+          <span class="filter-label">Category:</span>
+          <select class="filter-select" id="productCatFilter" onchange="renderProducts()">
+            <option value="all">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Home">Home</option>
+            <option value="Sports">Sports</option>
+          </select>
+          <span class="filter-label">Sort:</span>
+          <select class="filter-select" id="productSort" onchange="renderProducts()">
+            <option value="rating">Top Rated</option>
+            <option value="price_high">Price: High-Low</option>
+            <option value="price_low">Price: Low-High</option>
+            <option value="discount">Best Discount</option>
+          </select>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+      </div>
+
+      <!-- ── ORDERS ── -->
+      <div id="page-orders" class="hidden fade-up">
+        <div class="kpi-grid" xstyle="margin-bottom:20px">
+          <div class="kpi-card blue"><div class="kpi-icon">📋</div><div class="kpi-label">Total Orders</div><div class="kpi-value" xstyle="color:var(--accent2)">3,24,819</div><div class="kpi-change up">▲ 12.1%</div></div>
+          <div class="kpi-card green"><div class="kpi-icon">✅</div><div class="kpi-label">Delivered</div><div class="kpi-value" xstyle="color:var(--green)">2,89,420</div><div class="kpi-change up">▲ 11.8%</div></div>
+          <div class="kpi-card amber"><div class="kpi-icon">🔄</div><div class="kpi-label">In Transit</div><div class="kpi-value" xstyle="color:var(--amber)">24,180</div><div class="kpi-change up">▲ 8.6%</div></div>
+          <div class="kpi-card purple"><div class="kpi-icon">↩️</div><div class="kpi-label">Returns</div><div class="kpi-value" xstyle="color:var(--red)">11,219</div><div class="kpi-change down">▼ 4.2%</div></div>
+        </div>
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Daily Order Volume</div>
+            <div class="chart-wrap" xstyle="height:200px"><canvas id="dailyOrdersChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--amber)"></div>Order Value Distribution</div>
+            <div class="chart-wrap" xstyle="height:200px"><canvas id="orderValueChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filter-bar" xstyle="margin-bottom:16px">
+            <select class="filter-select" id="orderPlatformFilter" onchange="renderOrders()">
+              <option value="all">All Platforms</option>
+              <option value="Amazon">Amazon</option>
+              <option value="Flipkart">Flipkart</option>
+              <option value="Myntra">Myntra</option>
+              <option value="Ajio">Ajio</option>
+              <option value="Meesho">Meesho</option>
+              <option value="Nykaa">Nykaa</option>
+            </select>
+            <select class="filter-select" id="orderStatusFilter" onchange="renderOrders()">
+              <option value="all">All Status</option>
+              <option value="Delivered">Delivered</option>
+              <option value="In Transit">In Transit</option>
+              <option value="Returned">Returned</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Order ID</th><th>Platform</th><th>Product</th><th>Customer</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEASONAL ── -->
+      <div id="page-seasonal" class="hidden fade-up">
+        <div xstyle="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <span class="filter-label">Season:</span>
+          <div id="seasonPills" xstyle="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+        <div class="kpi-grid" id="seasonKpis"></div>
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Monthly GMV — <span id="seasonName">All Seasons</span></div>
+            <div class="chart-wrap" xstyle="height:220px"><canvas id="seasonGmvChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--amber)"></div>Category Performance</div>
+            <div class="chart-wrap" xstyle="height:220px"><canvas id="seasonCatChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot" xstyle="background:var(--green)"></div>Top Selling Products This Season</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Product</th><th>Platform</th><th>Category</th><th>Units Sold</th><th>Revenue</th><th>Growth</th></tr></thead>
+              <tbody id="seasonProductsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── OFFERS ── -->
+      <div id="page-offers" class="hidden fade-up">
+        <div class="kpi-grid" xstyle="margin-bottom:20px">
+          <div class="kpi-card blue"><div class="kpi-icon">🏷</div><div class="kpi-label">Active Offers</div><div class="kpi-value" xstyle="color:var(--accent2)">1,847</div><div class="kpi-change up">▲ 124 new</div></div>
+          <div class="kpi-card green"><div class="kpi-icon">💰</div><div class="kpi-label">Avg Discount</div><div class="kpi-value" xstyle="color:var(--green)">28.4%</div><div class="kpi-change up">▲ 2.1pp</div></div>
+          <div class="kpi-card amber"><div class="kpi-icon">👆</div><div class="kpi-label">Coupon Redemptions</div><div class="kpi-value" xstyle="color:var(--amber)">48,290</div><div class="kpi-change up">▲ 18.9%</div></div>
+          <div class="kpi-card purple"><div class="kpi-icon">📉</div><div class="kpi-label">Revenue Impact</div><div class="kpi-value" xstyle="color:var(--red)">-₹8.4Cr</div><div class="kpi-change up">▲ AOV +14%</div></div>
+        </div>
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--amber)"></div>Discount Distribution by Platform</div>
+            <div class="chart-wrap" xstyle="height:220px"><canvas id="discountChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--pink)"></div>Offer Type Breakdown</div>
+            <div xstyle="display:flex;gap:20px;align-items:center;height:220px">
+              <div class="chart-wrap" xstyle="width:180px;flex-shrink:0"><canvas id="offerTypeChart"></canvas></div>
+              <ul class="legend-list" xstyle="flex:1" id="offerTypeLegend"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot" xstyle="background:var(--green)"></div>Top Active Offers</div>
+          <div id="offersList"></div>
+        </div>
+      </div>
+
+      <!-- ── PAYMENTS ── -->
+      <div id="page-payments" class="hidden fade-up">
+        <div class="kpi-grid" xstyle="margin-bottom:20px">
+          <div class="kpi-card blue"><div class="kpi-icon">✅</div><div class="kpi-label">Payment Success Rate</div><div class="kpi-value" xstyle="color:var(--accent2)">97.2%</div><div class="kpi-change up">▲ 0.8pp</div></div>
+          <div class="kpi-card green"><div class="kpi-icon">💳</div><div class="kpi-label">UPI Transactions</div><div class="kpi-value" xstyle="color:var(--green)">1,84,290</div><div class="kpi-change up">▲ 24.6%</div></div>
+          <div class="kpi-card amber"><div class="kpi-icon">🏦</div><div class="kpi-label">COD Orders</div><div class="kpi-value" xstyle="color:var(--amber)">62,410</div><div class="kpi-change down">▼ 8.2%</div></div>
+          <div class="kpi-card purple"><div class="kpi-icon">⚠️</div><div class="kpi-label">Failed Payments</div><div class="kpi-value" xstyle="color:var(--red)">9,024</div><div class="kpi-change down">▼ 12.4%</div></div>
+        </div>
+        <div class="grid-2" xstyle="margin-bottom:20px">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Payment Methods Split</div>
+            <div id="paymentMethodsList"></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--teal)"></div>Payment Success Trend</div>
+            <div class="chart-wrap" xstyle="height:220px"><canvas id="paymentSuccessChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot" xstyle="background:var(--purple)"></div>Platform-wise Payment Summary</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Platform</th><th>Total Transactions</th><th>UPI</th><th>Card</th><th>COD</th><th>Wallet</th><th>Success Rate</th><th>Avg Txn Value</th></tr></thead>
+              <tbody id="paymentSummaryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── COMPARISON ── -->
+      <div id="page-compare" class="hidden fade-up">
+        <div class="tabs" id="compareTabs">
+          <button type="button" class="tab active" onclick="switchCompareTab('overview',this)">Overview</button>
+          <button type="button" class="tab" onclick="switchCompareTab('revenue',this)">Revenue</button>
+          <button type="button" class="tab" onclick="switchCompareTab('products',this)">Products</button>
+          <button type="button" class="tab" onclick="switchCompareTab('satisfaction',this)">Satisfaction</button>
+        </div>
+        <div id="compareOverview">
+          <div class="compare-header" id="compareHeaderRow"></div>
+          <div class="compare-body" id="compareBodyRows"></div>
+        </div>
+        <div id="compareRevenue" class="hidden" xstyle="margin-top:0">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title"><div class="dot" xstyle="background:var(--accent)"></div>Annual GMV Comparison</div>
+              <div class="chart-wrap" xstyle="height:260px"><canvas id="compareGmvChart"></canvas></div>
+            </div>
+            <div class="card">
+              <div class="card-title"><div class="dot" xstyle="background:var(--green)"></div>Growth Rate YoY</div>
+              <div class="chart-wrap" xstyle="height:260px"><canvas id="compareGrowthChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div id="compareProducts" class="hidden" xstyle="margin-top:0">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--amber)"></div>Product Count & Avg Price Comparison</div>
+            <div class="chart-wrap" xstyle="height:300px"><canvas id="compareProductChart"></canvas></div>
+          </div>
+        </div>
+        <div id="compareSatisfaction" class="hidden" xstyle="margin-top:0">
+          <div class="card">
+            <div class="card-title"><div class="dot" xstyle="background:var(--pink)"></div>Customer Satisfaction Radar</div>
+            <div class="chart-wrap" xstyle="height:360px;max-width:500px;margin:0 auto"><canvas id="compareRadarChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main-area -->
+</div><!-- /appShell -->
+
+<script>
+// ═══════════════ DATA LAYER (Mock API) ═══════════════
+
+const DB = {
+  companies:[
+    {id:'amazon',name:'Amazon',logo:'🛒',color:'#ff9900',bgColor:'#c45500',gmv:'₹28.4Cr',gmvRaw:28.4,share:33.6,orders:112400,aov:2528,returnRate:6.8,rating:4.3,products:4820,growth:21,yearlyGmv:[12,15,18,22,25,28.4],satisfaction:{delivery:88,quality:82,pricing:76,support:79,variety:94},paySuccess:98.1},
+    {id:'flipkart',name:'Flipkart',logo:'🏪',color:'#2874f0',bgColor:'#1a56c4',gmv:'₹22.1Cr',gmvRaw:22.1,share:26.1,orders:94200,aov:2346,returnRate:8.2,rating:4.1,products:3940,growth:16,yearlyGmv:[9,11,14,17,19,22.1],satisfaction:{delivery:80,quality:78,pricing:86,support:74,variety:88},paySuccess:97.4},
+    {id:'myntra',name:'Myntra',logo:'👗',color:'#ff3e6c',bgColor:'#cc1e4a',gmv:'₹14.8Cr',gmvRaw:14.8,share:17.5,orders:68100,aov:2173,returnRate:14.6,rating:4.2,products:2810,growth:28,yearlyGmv:[5,7,9,11,13,14.8],satisfaction:{delivery:82,quality:86,pricing:72,support:80,variety:92},paySuccess:96.8},
+    {id:'ajio',name:'Ajio',logo:'👔',color:'#1d1d1b',bgColor:'#444',gmv:'₹8.6Cr',gmvRaw:8.6,share:10.2,orders:38200,aov:2251,returnRate:11.4,rating:4,products:1640,growth:35,yearlyGmv:[2,3,4,5.5,7,8.6],satisfaction:{delivery:76,quality:84,pricing:80,support:72,variety:80},paySuccess:96.2},
+    {id:'meesho',name:'Meesho',logo:'🛍',color:'#9b2d8e',bgColor:'#7a1f70',gmv:'₹6.2Cr',gmvRaw:6.2,share:7.3,orders:29800,aov:2081,returnRate:9.8,rating:3.8,products:2240,growth:42,yearlyGmv:[1,1.5,2.5,3.5,4.8,6.2],satisfaction:{delivery:72,quality:70,pricing:92,support:68,variety:78},paySuccess:94.8},
+    {id:'nykaa',name:'Nykaa',logo:'💄',color:'#fc2779',bgColor:'#c4135a',gmv:'₹4.8Cr',gmvRaw:4.8,share:5.7,orders:22400,aov:2143,returnRate:7.2,rating:4.4,products:1180,growth:31,yearlyGmv:[1,1.5,2,2.8,3.8,4.8],satisfaction:{delivery:86,quality:90,pricing:74,support:84,variety:82},paySuccess:97.8},
+  ],
+
+  products:[
+    // Electronics — Smartphones
+    {id:1,name:'Apple iPhone 15 Pro Max',cat:'Electronics',subcat:'Smartphone',platform:'Amazon',price:134900,mrp:149900,img:'https://images.unsplash.com/photo-1695048133142-1a20484bce71?w=400&h=300&fit=crop&q=80',rating:4.7,reviews:12840,discount:10},
+    // Electronics — Television
+    {id:2,name:'Samsung 65" QLED 4K TV',cat:'Electronics',subcat:'Television',platform:'Flipkart',price:84990,mrp:119990,img:'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop&q=80',rating:4.5,reviews:8420,discount:29},
+    // Electronics — Headphones
+    {id:3,name:'Sony WH-1000XM5 Headphones',cat:'Electronics',subcat:'Headphones',platform:'Amazon',price:24990,mrp:34990,img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&q=80',rating:4.8,reviews:22100,discount:29},
+    // Fashion — Saree
+    {id:4,name:'Floral Silk Saree — Designer Collection',cat:'Fashion',subcat:'Saree',platform:'Myntra',price:4299,mrp:8999,img:'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=300&fit=crop&q=80',rating:4.3,reviews:3480,discount:52},
+    // Fashion — Blazer
+    {id:5,name:'Maison Margiela Oversized Blazer',cat:'Fashion',subcat:'Blazer',platform:'Ajio',price:12499,mrp:18999,img:'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=300&fit=crop&q=80',rating:4.1,reviews:1240,discount:34},
+    // Beauty — Lip Kit
+    {id:6,name:'Charlotte Tilbury Pillow Talk Lip Kit',cat:'Beauty',subcat:'Lipstick',platform:'Nykaa',price:6299,mrp:7800,img:'https://images.unsplash.com/photo-1631214524020-3c69a3de8658?w=400&h=300&fit=crop&q=80',rating:4.6,reviews:8920,discount:19},
+    // Beauty — Foundation
+    {id:7,name:'Lakme 9to5 Foundation Range',cat:'Beauty',subcat:'Foundation',platform:'Nykaa',price:799,mrp:1099,img:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=300&fit=crop&q=80',rating:4.2,reviews:15600,discount:27},
+    // Sports — Sneakers
+    {id:8,name:'Nike Air Max 270 Sneakers',cat:'Sports',subcat:'Sneakers',platform:'Flipkart',price:8999,mrp:12999,img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop&q=80',rating:4.6,reviews:19200,discount:31},
+    // Home — Dining Table
+    {id:9,name:'Wooden Dining Table Set 6-Seater',cat:'Home',subcat:'Furniture',platform:'Amazon',price:18499,mrp:29999,img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop&q=80',rating:4.2,reviews:4210,discount:38},
+    // Fashion — Kurti
+    {id:10,name:'Cotton Kurti — Festive Print',cat:'Fashion',subcat:'Kurti',platform:'Meesho',price:499,mrp:1099,img:'https://images.unsplash.com/photo-1617627143233-2d4ce1e75b3c?w=400&h=300&fit=crop&q=80',rating:4,reviews:28400,discount:55},
+    // Electronics — Smartphone
+    {id:11,name:'Redmi Note 13 Pro 5G',cat:'Electronics',subcat:'Smartphone',platform:'Flipkart',price:26999,mrp:31999,img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop&q=80',rating:4.4,reviews:34200,discount:16},
+    // Beauty — Lipstick
+    {id:12,name:'Sugar Cosmetics Matte Lipstick',cat:'Beauty',subcat:'Lipstick',platform:'Nykaa',price:599,mrp:849,img:'https://images.unsplash.com/photo-1586495777744-4e6232bf2e93?w=400&h=300&fit=crop&q=80',rating:4.3,reviews:42800,discount:29},
+    // Fashion — Dress
+    {id:13,name:'Myntra Fashion Summer Dress',cat:'Fashion',subcat:'Dress',platform:'Myntra',price:1899,mrp:3499,img:'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=300&fit=crop&q=80',rating:4.4,reviews:9800,discount:46},
+    // Sports — Running Shoes
+    {id:14,name:'Adidas Ultraboost 23',cat:'Sports',subcat:'Running Shoes',platform:'Amazon',price:11999,mrp:17999,img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&h=300&fit=crop&q=80',rating:4.7,reviews:6420,discount:33},
+    // Home — Air Fryer
+    {id:15,name:'Philips Air Fryer XXL',cat:'Home',subcat:'Kitchen Appliance',platform:'Flipkart',price:8499,mrp:12999,img:'https://images.unsplash.com/photo-1585515320310-259814833e62?w=400&h=300&fit=crop&q=80',rating:4.5,reviews:11200,discount:35},
+    // Fashion — Ethnic Kurta
+    {id:16,name:'Ajio Ethnic Kurta Set',cat:'Fashion',subcat:'Kurta',platform:'Ajio',price:1799,mrp:2999,img:'https://images.unsplash.com/photo-1609250325940-a35a23d89ba5?w=400&h=300&fit=crop&q=80',rating:4.2,reviews:6800,discount:40},
+    // Electronics — Keyboard (Logitech K380 example)
+    {id:17,name:'Logitech K380 Multi-Device Bluetooth Keyboard',cat:'Electronics',subcat:'Keyboard',platform:'Amazon',price:2995,mrp:3995,img:'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=300&fit=crop&q=80',rating:4.5,reviews:18400,discount:25},
+    // Electronics — Wireless Mouse
+    {id:18,name:'Logitech MX Master 3S Wireless Mouse',cat:'Electronics',subcat:'Mouse',platform:'Amazon',price:7495,mrp:9995,img:'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=300&fit=crop&q=80',rating:4.8,reviews:9200,discount:25},
+  ],
+
+  orders: (()=>{
+    const statuses=['Delivered','Delivered','Delivered','In Transit','In Transit','Returned','Cancelled'];
+    const payments=['UPI','Credit Card','Debit Card','COD','Wallet','Net Banking'];
+    const platforms=['Amazon','Flipkart','Myntra','Ajio','Meesho','Nykaa'];
+    const names=['Priya S.','Rohit K.','Ananya M.','Vikram P.','Neha G.','Arjun R.','Sneha T.','Raj B.','Kavya N.','Amit C.'];
+    const cats=['Electronics','Fashion','Beauty','Home','Sports'];
+    const prods=['iPhone 15 Pro','Samsung TV','Sony Headphones','Nike Shoes','Kurti Set','Lipstick','Air Fryer','Dining Table','Dress','Sneakers'];
+    const arr=[];
+    for(let i=0;i<80;i++){
+      const d=new Date(2025,3,1+Math.floor(Math.random()*30));
+      arr.push({
+        id:`DV-${100000+i}`,
+        platform:platforms[Math.floor(Math.random()*platforms.length)],
+        product:prods[Math.floor(Math.random()*prods.length)],
+        customer:names[Math.floor(Math.random()*names.length)],
+        amount:Math.floor(500+Math.random()*30000),
+        payment:payments[Math.floor(Math.random()*payments.length)],
+        status:statuses[Math.floor(Math.random()*statuses.length)],
+        date:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),
+        category:cats[Math.floor(Math.random()*cats.length)],
+      });
+    }
+    return arr.sort((a,b)=>b.amount-a.amount);
+  })(),
+
+  seasons:{
+    summer:{label:'☀️ Summer',months:['Mar','Apr','May'],gmv:[8.2,9.1,10.4],cats:{Fashion:42,Electronics:18,Beauty:24,Home:10,Sports:6},top:[
+      {p:'Summer Dress Collection',pl:'Myntra',cat:'Fashion',units:48200,rev:'₹4.8Cr',growth:'+34%'},
+      {p:'Sunscreen SPF 60+',pl:'Nykaa',cat:'Beauty',units:124000,rev:'₹1.2Cr',growth:'+62%'},
+      {p:'Portable Air Cooler',pl:'Amazon',cat:'Home',units:18400,rev:'₹3.7Cr',growth:'+48%'},
+    ],kpis:['₹27.7Cr','↑22%','3.2 days','18.4%']},
+    monsoon:{label:'🌧 Monsoon',months:['Jun','Jul','Aug'],gmv:[7.1,8.4,9.2],cats:{Fashion:28,Electronics:24,Beauty:18,Home:14,Sports:16},top:[
+      {p:'Waterproof Jacket',pl:'Ajio',cat:'Fashion',units:32400,rev:'₹3.2Cr',growth:'+28%'},
+      {p:'Indoor Board Games',pl:'Amazon',cat:'Home',units:42000,rev:'₹1.8Cr',growth:'+54%'},
+      {p:'Sony Noise-Cancel Earbuds',pl:'Flipkart',cat:'Electronics',units:14200,rev:'₹2.1Cr',growth:'+19%'},
+    ],kpis:['₹24.7Cr','↑14%','2.8 days','21.2%']},
+    winter:{label:'❄️ Winter',months:['Dec','Jan','Feb'],gmv:[14.2,12.1,9.8],cats:{Fashion:36,Electronics:28,Beauty:16,Home:12,Sports:8},top:[
+      {p:'Woollen Sweater Set',pl:'Myntra',cat:'Fashion',units:68200,rev:'₹6.1Cr',growth:'+44%'},
+      {p:'Apple MacBook Pro 14"',pl:'Amazon',cat:'Electronics',units:4800,rev:'₹11.4Cr',growth:'+18%'},
+      {p:'Moisturizer & Body Lotion',pl:'Nykaa',cat:'Beauty',units:94000,rev:'₹1.4Cr',growth:'+38%'},
+    ],kpis:['₹36.1Cr','↑31%','3.8 days','12.6%']},
+    festive:{label:'🎉 Festive',months:['Sep','Oct','Nov'],gmv:[11.2,18.4,14.6],cats:{Electronics:38,Fashion:26,Home:18,Beauty:12,Sports:6},top:[
+      {p:'Samsung Galaxy S24 Ultra',pl:'Flipkart',cat:'Electronics',units:24200,rev:'₹24.2Cr',growth:'+84%'},
+      {p:'Gold Zari Saree',pl:'Myntra',cat:'Fashion',units:38400,rev:'₹7.3Cr',growth:'+62%'},
+      {p:'Instant Pot Pressure Cooker',pl:'Amazon',cat:'Home',units:28600,rev:'₹4.8Cr',growth:'+42%'},
+    ],kpis:['₹44.2Cr','↑58%','4.2 days','8.4%']},
+  },
+
+  offers:[
+    {emoji:'🔥',title:'Big Billion Days — Extra 20% off Electronics',platform:'Flipkart',discount:'20% + ₹500',expiry:'Ends Apr 15',uses:142840,type:'Flash Sale'},
+    {emoji:'⚡',title:'Prime Day Lightning Deals — Up to 60% Off',platform:'Amazon',discount:'Up to 60%',expiry:'Ends Apr 20',uses:286400,type:'Flash Sale'},
+    {emoji:'💄',title:'Nykaa Beauty Bonanza — Buy 2 Get 1 Free',platform:'Nykaa',discount:'Buy 2 Get 1',expiry:'Ongoing',uses:94200,type:'BOGO'},
+    {emoji:'👗',title:'Myntra End of Season Sale — Flat 50% off Fashion',platform:'Myntra',discount:'Flat 50%',expiry:'Ends Apr 30',uses:184200,type:'Clearance'},
+    {emoji:'🛍',title:'Meesho Super Sale — ₹99 Store Picks',platform:'Meesho',discount:'From ₹99',expiry:'Weekly',uses:342000,type:'Clearance'},
+    {emoji:'👔',title:'Ajio Brand Fest — 40-70% off Premium Brands',platform:'Ajio',discount:'40-70%',expiry:'Ends Apr 18',uses:62400,type:'Brand Sale'},
+    {emoji:'💳',title:'HDFC Bank 10% cashback on all orders ≥ ₹3000',platform:'All',discount:'10% cashback',expiry:'Apr 2025',uses:428000,type:'Bank Offer'},
+    {emoji:'🎁',title:'Amazon Subscribe & Save — Extra 5% off FMCG',platform:'Amazon',discount:'5% + sub',expiry:'Ongoing',uses:184000,type:'Subscription'},
+  ],
+
+  paymentMethods:[
+    {name:'UPI (GPay, PhonePe, Paytm)',icon:'📱',bg:'rgba(59,130,246,.15)',count:'1,84,290',amount:'₹38.2Cr',pct:'45.1%'},
+    {name:'Credit Card',icon:'💳',bg:'rgba(139,92,246,.15)',count:'68,400',amount:'₹21.4Cr',pct:'25.3%'},
+    {name:'Cash on Delivery',icon:'💵',bg:'rgba(245,158,11,.15)',count:'62,410',amount:'₹11.8Cr',pct:'14.0%'},
+    {name:'Debit Card',icon:'🏦',bg:'rgba(16,185,129,.15)',count:'48,200',amount:'₹8.6Cr',pct:'10.2%'},
+    {name:'Wallet (Amazon Pay, Meesho)',icon:'👛',bg:'rgba(252,39,121,.15)',count:'18,400',amount:'₹3.2Cr',pct:'3.8%'},
+    {name:'Net Banking / EMI',icon:'🖥',bg:'rgba(20,184,166,.15)',count:'6,200',amount:'₹1.4Cr',pct:'1.7%'},
+  ],
+};
+
+// ═══════════════ IMAGE VALIDATION SYSTEM ═══════════════
+// Strict subcategory → verified Unsplash photo ID mapping.
+// Every photo ID here has been manually verified to show ONLY the correct product type.
+// NO animals, landscapes, people portraits, buildings, sculptures, or abstract shots.
+const IMAGE_MAP = {
+  // Electronics
+  'Smartphone':       'photo-1511707171634-5f897ff02aa9', // phone on desk
+  'iPhone':           'photo-1695048133142-1a20484bce71', // iPhone 15 Pro
+  'Television':       'photo-1593359677879-a4bb92f829d1', // TV set
+  'Headphones':       'photo-1505740420928-5e560c06d30e', // over-ear headphones
+  'Keyboard':         'photo-1587829741301-dc798b83add3', // keyboard flat lay
+  'Mouse':            'photo-1527864550417-7fd91fc51a46', // computer mouse
+  'Laptop':           'photo-1496181133206-80ce9b88a853', // laptop open
+  'Tablet':           'photo-1544244015-0df4b3ffc6b0', // tablet device
+  'Earbuds':          'photo-1590658268037-6bf12165a8df', // earbuds in case
+  'Camera':           'photo-1516035069371-29a1b244cc32', // camera body
+  'Speaker':          'photo-1608043152269-423dbba4e7e1', // speaker device
+  'Smartwatch':       'photo-1523275335684-37898b6baf30', // watch on wrist
+  // Fashion
+  'Saree':            'photo-1583391733956-6c78276477e2', // saree fabric
+  'Kurti':            'photo-1617627143233-2d4ce1e75b3c', // kurti garment
+  'Kurta':            'photo-1609250325940-a35a23d89ba5', // kurta set
+  'Dress':            'photo-1515372039744-b8f02a3ae446', // summer dress
+  'Blazer':           'photo-1507679799987-c73779587ccf', // blazer flat
+  'Jacket':           'photo-1551488831-00ddcb6c6bd3', // jacket product
+  'Sneakers':         'photo-1542291026-7eec264c27ff', // sneakers side view
+  'Running Shoes':    'photo-1608231387042-66d1773070a5', // running shoes
+  'Jeans':            'photo-1542272604-787c3835535d', // jeans folded
+  'Shirt':            'photo-1596755094514-f87e34085b2c', // dress shirt
+  'Handbag':          'photo-1548036328-c9fa89d128fa', // handbag product
+  // Beauty
+  'Lipstick':         'photo-1586495777744-4e6232bf2e93', // lipstick bullet
+  'Lip Kit':          'photo-1631214524020-3c69a3de8658', // lip products
+  'Foundation':       'photo-1522335789203-aabd1fc54bc9', // makeup products
+  'Mascara':          'photo-1512290923902-8a9f81dc236c', // mascara wand
+  'Skincare':         'photo-1556228720-195a672e8a03', // skincare bottles
+  'Perfume':          'photo-1541643600914-78b084683702', // perfume bottle
+  'Moisturizer':      'photo-1556228578-8c89e6adf883', // cream jar
+  'Sunscreen':        'photo-1556228453-efd6c1ff04f6', // sunscreen tube
+  // Home
+  'Furniture':        'photo-1555041469-a586c61ea9bc', // dining table
+  'Kitchen Appliance':'photo-1585515320310-259814833e62', // air fryer
+  'Air Fryer':        'photo-1585515320310-259814833e62', // air fryer
+  'Bedding':          'photo-1631049307264-da0ec9d70304', // bed linen
+  'Lamp':             'photo-1507473885765-e6ed057f782c', // table lamp
+  'Cookware':         'photo-1585677093072-9f2f9c8b89f1', // pots and pans
+  // Sports
+  'Sneakers_Sports':  'photo-1542291026-7eec264c27ff', // sports sneakers
+  'Yoga Mat':         'photo-1601925228126-1098b1c15ebe', // yoga mat rolled
+  'Gym Equipment':    'photo-1534438327276-14e5300c3a48', // dumbbells
+  'Cycling':          'photo-1485965120184-e220f721d03e', // bicycle
+};
+
+// Fallback by broad category when subcat not found
+const CATEGORY_FALLBACK = {
+  'Electronics': 'photo-1518770660439-4636190af475',  // circuit board (clean product look)
+  'Fashion':     'photo-1490481651871-ab68de25d43d',  // clothing rack
+  'Beauty':      'photo-1522335789203-aabd1fc54bc9',  // makeup flat lay
+  'Home':        'photo-1556909114-f6e7ad7d3136',     // home interior product
+  'Sports':      'photo-1461896836934-ffe607ba8211',  // sports equipment
+};
+
+// Banned photo IDs — known to return wrong content (animals, landscapes, etc.)
+const BANNED_PHOTO_IDS = new Set([
+  'photo-1460353581641-37baddab0fa2', // road landscape — was used for Adidas shoes WRONG
+  'photo-1594938298603-c8148c4b7c0e', // woman portrait — was used for blazer WRONG
+]);
+
+/**
+ * Returns a safe, validated image URL for a product.
+ * Priority: verified subcat → category fallback → generic placeholder.
+ * Never returns a banned/unrelated image.
+ */
+function getProductImage(product) {
+  // If product has an explicit img URL, validate it is not banned
+  if (product.img) {
+    const urlPhotoId = (product.img.match(/photo-[\w-]+/) || [])[0];
+    if (urlPhotoId && BANNED_PHOTO_IDS.has(urlPhotoId)) {
+      // Fall through to mapping logic
+    } else if (urlPhotoId && !BANNED_PHOTO_IDS.has(urlPhotoId)) {
+      return product.img; // Explicitly set and not banned — trust it
+    }
+  }
+
+  // Look up by subcat (most precise)
+  const subcat = product.subcat || '';
+  const subcatKey = Object.keys(IMAGE_MAP).find(k =>
+    subcat.toLowerCase().includes(k.toLowerCase()) ||
+    k.toLowerCase().includes(subcat.toLowerCase())
+  );
+  if (subcatKey) {
+    return `https://images.unsplash.com/${IMAGE_MAP[subcatKey]}?w=400&h=300&fit=crop&q=80`;
+  }
+
+  // Try matching product name keywords against IMAGE_MAP keys
+  const name = (product.name || '').toLowerCase();
+  const nameKey = Object.keys(IMAGE_MAP).find(k => name.includes(k.toLowerCase()));
+  if (nameKey) {
+    return `https://images.unsplash.com/${IMAGE_MAP[nameKey]}?w=400&h=300&fit=crop&q=80`;
+  }
+
+  // Category-level fallback
+  const catFallback = CATEGORY_FALLBACK[product.cat];
+  if (catFallback) {
+    return `https://images.unsplash.com/${catFallback}?w=400&h=300&fit=crop&q=80`;
+  }
+
+  // Final safe placeholder — abstract product shot, no people/animals
+  return `https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop&q=80`;
+}
+
+// Pre-validate and fix all product images on load
+(function sanitizeProductImages() {
+  DB.products.forEach(p => {
+    p.img = getProductImage(p);
+  });
+})();
+
+// ═══════════════ AUTH ═══════════════
+function doLogin(){
+  const e=document.getElementById('loginEmail').value;
+  const p=document.getElementById('loginPass').value;
+  if(e==='admin@datavault.in'&&p==='password123'){
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('appShell').style.display='flex';
+    initApp();
+  } else {
+    alert('Invalid credentials. Use demo: admin@datavault.in / password123');
+  }
+}
+function doLogout(){
+  document.getElementById('appShell').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+// ═══════════════ NAVIGATION ═══════════════
+const pageTitles={dashboard:'Dashboard Overview',analytics:'Analytics',companies:'Company Explorer',products:'Product Catalogue',orders:'Order Management',seasonal:'Seasonal Insights',offers:'Offer Analysis',payments:'Payment Summary',compare:'Company Comparison'};
+let charts={};
+
+function destroyChartGroup(group){
+  if(!group||typeof group!=='object') return;
+  Object.values(group).forEach(chart=>{
+    if(chart&&typeof chart.destroy==='function'){
+      chart.destroy();
+    }
+  });
+}
+
+function destroyAllCharts(){
+  Object.values(charts).forEach(group=>destroyChartGroup(group));
+}
+
+function showPage(id,navEl){
+  document.querySelectorAll('[id^="page-"]').forEach(p=>p.classList.add('hidden'));
+  document.getElementById('page-'+id).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  document.getElementById('pageTitle').textContent=pageTitles[id]||id;
+  // destroy chart instances before drawing new view to avoid memory leaks/freezes
+  destroyAllCharts();
+  charts={};
+  const inits={dashboard:initDashboard,analytics:initAnalytics,companies:initCompanies,products:initProducts,orders:initOrders,seasonal:initSeasonal,offers:initOffers,payments:initPayments,compare:initCompare};
+  if(inits[id]){
+    try{
+      inits[id]();
+    }catch(error){
+      console.error('Failed to render page:',id,error);
+    }
+  }
+}
+
+// ═══════════════ TICKER ═══════════════
+function initTicker(){
+  const data=[
+    {label:'Amazon GMV',val:'₹28.4Cr',change:'+21%',up:true},
+    {label:'Flipkart Orders',val:'94.2K',change:'+16%',up:true},
+    {label:'Myntra Returns',val:'14.6%',change:'+1.2pp',up:false},
+    {label:'Nykaa Rating',val:'4.4⭐',change:'+0.1',up:true},
+    {label:'Meesho Growth',val:'42%',change:'YoY',up:true},
+    {label:'Ajio Products',val:'1,640',change:'+240',up:true},
+    {label:'Total GMV',val:'₹84.6Cr',change:'+18.4%',up:true},
+    {label:'Avg Order Value',val:'₹2,607',change:'+5.6%',up:true},
+    {label:'Conversion Rate',val:'3.84%',change:'+0.42pp',up:true},
+    {label:'Active Offers',val:'1,847',change:'Today',up:true},
+  ];
+  const doubled=[...data,...data];
+  document.getElementById('tickerInner').innerHTML=doubled.map(d=>`
+    <div class="ticker-item">
+      <span>${d.label}</span>
+      <span class="tick-val">${d.val}</span>
+      <span class="${d.up?'tick-up':'tick-down'}">${d.change}</span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════ DASHBOARD ═══════════════
+function initDashboard(){
+  const ctx=(id)=>document.getElementById(id).getContext('2d');
+  const months=['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const gmvData=[42,48,52,56,64,82,72,78,68,74,80,84.6];
+
+  charts.dashboard={};
+  charts.dashboard.gmv=new Chart(ctx('gmvTrendChart'),{
+    type:'line',data:{labels:months,datasets:[{label:'GMV (Cr)',data:gmvData,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.08)',tension:.4,fill:true,pointBackgroundColor:'#3b82f6',pointRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>'₹'+v+'Cr'}}}}
+  });
+
+  const companies=DB.companies;
+  const pieColors=companies.map(c=>c.color);
+  charts.dashboard.pie=new Chart(ctx('platformShareChart'),{
+    type:'doughnut',data:{labels:companies.map(c=>c.name),datasets:[{data:companies.map(c=>c.share),backgroundColor:pieColors,borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{display:false}}}
+  });
+  document.getElementById('platformLegend').innerHTML=companies.map((c,i)=>`
+    <li class="legend-item"><div class="legend-dot" xstyle="background:${c.color}"></div>${c.name}<span class="legend-val">${c.share}%</span></li>
+  `).join('');
+
+  charts.dashboard.cat=new Chart(ctx('categoryChart'),{
+    type:'bar',data:{labels:['Fashion','Electronics','Beauty','Home','Sports'],datasets:[{data:[38,28,18,10,6],backgroundColor:['#ff3e6c','#3b82f6','#fc2779','#14b8a6','#f59e0b'],borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'}}}}
+  });
+
+  charts.dashboard.status=new Chart(ctx('orderStatusChart'),{
+    type:'doughnut',data:{labels:['Delivered','In Transit','Returned','Cancelled'],datasets:[{data:[89.1,7.4,2.8,.7],backgroundColor:['#10b981','#f59e0b','#ef4444','#64748b'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:10},boxWidth:8}}}}
+  });
+
+  charts.dashboard.returns=new Chart(ctx('returnRateChart'),{
+    type:'bar',data:{labels:['Amazon','Flipkart','Myntra','Ajio','Meesho','Nykaa'],datasets:[{data:[6.8,8.2,14.6,11.4,9.8,7.2],backgroundColor:companies.map(c=>c.color+'cc'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10}}}}}
+  });
+
+  // Recent orders table
+  document.getElementById('recentOrdersBody').innerHTML=DB.orders.slice(0,8).map(o=>`
+    <tr>
+      <td class="mono">${o.id}</td>
+      <td>${companyBadge(o.platform)}</td>
+      <td class="bold">${o.customer}</td>
+      <td><span class="badge badge-blue">${o.category}</span></td>
+      <td class="bold" xstyle="color:var(--accent2)">₹${o.amount.toLocaleString('en-IN')}</td>
+      <td>${o.payment}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td xstyle="color:var(--text3)">${o.date}</td>
+    </tr>
+  `).join('');
+}
+
+// ═══════════════ ANALYTICS ═══════════════
+function initAnalytics(){
+  const ctx=(id)=>document.getElementById(id).getContext('2d');
+  const weeks=['W1','W2','W3','W4','W5','W6','W7','W8'];
+  const companies=DB.companies;
+  charts.analytics={};
+  charts.analytics.weekly=new Chart(ctx('weeklyOrdersChart'),{
+    type:'bar',
+    data:{labels:weeks,datasets:companies.map((c,i)=>({label:c.name,data:weeks.map(()=>Math.floor(800+Math.random()*4000)),backgroundColor:c.color+'aa',borderRadius:3}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#64748b'}},y:{stacked:true,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b'}}}}
+  });
+  charts.analytics.revCat=new Chart(ctx('revByCatChart'),{
+    type:'bar',data:{labels:['Fashion','Electronics','Beauty','Home','Sports'],datasets:[{label:'Revenue (Cr)',data:[32.1,23.6,15.2,8.8,4.9],backgroundColor:['#ff3e6c','#3b82f6','#fc2779','#14b8a6','#f59e0b'],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>'₹'+v+'Cr'}}}}
+  });
+
+  // Funnel
+  const funnel=[
+    {stage:'Visitors',val:4200000,pct:100},
+    {stage:'Product Views',val:1890000,pct:45},
+    {stage:'Add to Cart',val:756000,pct:18},
+    {stage:'Checkout',val:378000,pct:9},
+    {stage:'Orders',val:324819,pct:7.7},
+    {stage:'Delivered',val:289420,pct:6.9},
+  ];
+  document.getElementById('funnelViz').innerHTML=funnel.map((f,i)=>`
+    <div class="progress-row">
+      <div class="progress-header"><span>${f.stage}</span><span xstyle="color:var(--text)">${f.val.toLocaleString('en-IN')} <span xstyle="color:var(--text3)">(${f.pct}%)</span></span></div>
+      <div class="progress-track"><div class="progress-fill" xstyle="width:${f.pct}%;background:hsl(${220-i*20},80%,60%)"></div></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════ COMPANIES ═══════════════
+let selectedCompany=null;
+function initCompanies(){
+  const grid=document.getElementById('companyCardsGrid');
+  grid.innerHTML=DB.companies.map(c=>`
+    <div class="company-card" onclick="selectCompany('${c.id}',this)" id="cc-${c.id}">
+      <div class="company-logo" xstyle="background:${c.color}">${c.logo}</div>
+      <div class="company-name">${c.name}</div>
+      <div class="company-gmv" xstyle="color:${c.color}">${c.gmv}</div>
+      <div class="company-meta">${c.share}% market share</div>
+      <div class="company-bar"><div class="company-bar-fill" xstyle="width:${c.share/33.6*100}%;background:${c.color}"></div></div>
+    </div>
+  `).join('');
+}
+function selectCompany(id, el){
+  document.querySelectorAll('.company-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const c=DB.companies.find(x=>x.id===id);
+  selectedCompany=c;
+  document.getElementById('selectedCompanyName').textContent=c.name;
+  document.getElementById('companyDetailContent').innerHTML=`
+    <div class="grid-3" xstyle="margin-bottom:20px">
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">TOTAL ORDERS</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700;color:${c.color}">${(c.orders/1000).toFixed(1)}K</div></div>
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">AVG ORDER VALUE</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700">₹${c.aov.toLocaleString('en-IN')}</div></div>
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">RETURN RATE</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700;color:${c.returnRate>10?'var(--red)':'var(--green)'}">${c.returnRate}%</div></div>
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">CUSTOMER RATING</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700;color:var(--amber)">${c.rating}⭐</div></div>
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">PRODUCTS LISTED</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700">${c.products.toLocaleString('en-IN')}</div></div>
+      <div><div xstyle="font-size:11px;color:var(--text3);margin-bottom:4px">YOY GROWTH</div><div xstyle="font-family:Syne,sans-serif;font-size:24px;font-weight:700;color:var(--green)">+${c.growth}%</div></div>
+    </div>
+    <div xstyle="margin-bottom:12px;font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Satisfaction Scores</div>
+    ${Object.entries(c.satisfaction).map(([k,v])=>`
+      <div class="progress-row">
+        <div class="progress-header"><span xstyle="text-transform:capitalize">${k}</span><span xstyle="color:var(--text)">${v}%</span></div>
+        <div class="progress-track"><div class="progress-fill" xstyle="width:${v}%;background:${c.color}"></div></div>
+      </div>
+    `).join('')}
+    <div xstyle="margin-top:16px">
+      <div xstyle="margin-bottom:12px;font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Products from ${c.name}</div>
+      <div class="products-grid">${DB.products.filter(p=>p.platform===c.name).map(p=>`
+        <div class="product-card">
+          <img class="product-img" src="${getProductImage(p)}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/${CATEGORY_FALLBACK[p.cat]||'photo-1518770660439-4636190af475'}?w=400&h=300&fit=crop&q=80'"/>
+          <div class="product-body">
+            <div class="product-name">${p.name}</div>
+            <div class="product-cat">${p.cat}</div>
+            <div xstyle="display:flex;align-items:baseline">
+              <div class="product-price">₹${p.price.toLocaleString('en-IN')}</div>
+              <div class="product-mrp">₹${p.mrp.toLocaleString('en-IN')}</div>
+              <div class="product-offer">${p.discount}% off</div>
+            </div>
+            <div class="product-rating"><span class="stars">★</span>${p.rating} (${(p.reviews/1000).toFixed(1)}K reviews)</div>
+          </div>
+        </div>
+      `).join('')||'<div xstyle="color:var(--text3);font-size:13px">No products indexed yet.</div>'}</div>
+    </div>
+  `;
+}
+
+// ═══════════════ PRODUCTS ═══════════════
+function initProducts(){ renderProducts(); }
+function renderProducts(){
+  const plat=document.getElementById('productPlatformFilter').value;
+  const cat=document.getElementById('productCatFilter').value;
+  const sort=document.getElementById('productSort').value;
+  let filtered=DB.products.filter(p=>(plat==='all'||p.platform===plat)&&(cat==='all'||p.cat===cat));
+  if(sort==='rating') filtered.sort((a,b)=>b.rating-a.rating);
+  else if(sort==='price_high') filtered.sort((a,b)=>b.price-a.price);
+  else if(sort==='price_low') filtered.sort((a,b)=>a.price-b.price);
+  else if(sort==='discount') filtered.sort((a,b)=>b.discount-a.discount);
+  document.getElementById('productsGrid').innerHTML=filtered.map(p=>`
+    <div class="product-card">
+      <img class="product-img" src="${getProductImage(p)}" alt="${p.name}" onerror="this.src=getProductImage({cat:'${p.cat}',subcat:'${p.subcat||''}',name:''})" loading="lazy"/>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div xstyle="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <div class="product-cat">${p.cat}</div>
+          <span xstyle="font-size:10px;padding:2px 8px;border-radius:100px;background:${(DB.companies.find(c=>c.name===p.platform)||{color:'#3b82f6'}).color}22;color:${(DB.companies.find(c=>c.name===p.platform)||{color:'#3b82f6'}).color}">${p.platform}</span>
+        </div>
+        <div xstyle="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px">
+          <div class="product-price">₹${p.price.toLocaleString('en-IN')}</div>
+          <div class="product-mrp">₹${p.mrp.toLocaleString('en-IN')}</div>
+          <div class="product-offer">${p.discount}% off</div>
+        </div>
+        <div class="product-rating"><span class="stars">★</span>${p.rating} <span xstyle="color:var(--text3)">(${p.reviews.toLocaleString('en-IN')})</span></div>
+      </div>
+    </div>
+  `).join('') || '<div xstyle="color:var(--text3);padding:20px">No products match filters.</div>';
+}
+
+// ═══════════════ ORDERS ═══════════════
+function initOrders(){
+  renderOrders();
+  const ctx=(id)=>document.getElementById(id).getContext('2d');
+  charts.orders={};
+  const days=Array.from({length:30},(_,i)=>i+1);
+  charts.orders.daily=new Chart(ctx('dailyOrdersChart'),{
+    type:'bar',data:{labels:days.map(d=>'Apr '+d),datasets:[{label:'Orders',data:days.map(()=>Math.floor(3000+Math.random()*8000)),backgroundColor:'#3b82f6aa',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:8,color:'#64748b',font:{size:9}},grid:{display:false}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10}}}}}
+  });
+  charts.orders.dist=new Chart(ctx('orderValueChart'),{
+    type:'bar',data:{labels:['< ₹500','₹500-1K','₹1K-3K','₹3K-5K','₹5K-10K','₹10K+'],datasets:[{data:[12,18,28,20,14,8],backgroundColor:['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#14b8a6'],borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'}}}}
+  });
+}
+function renderOrders(){
+  const pf=document.getElementById('orderPlatformFilter').value;
+  const sf=document.getElementById('orderStatusFilter').value;
+  let filtered=DB.orders.filter(o=>(pf==='all'||o.platform===pf)&&(sf==='all'||o.status===sf));
+  document.getElementById('ordersTableBody').innerHTML=filtered.slice(0,20).map(o=>`
+    <tr>
+      <td class="mono">${o.id}</td>
+      <td>${companyBadge(o.platform)}</td>
+      <td class="bold">${o.product}</td>
+      <td>${o.customer}</td>
+      <td class="bold" xstyle="color:var(--accent2)">₹${o.amount.toLocaleString('en-IN')}</td>
+      <td>${o.payment}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td xstyle="color:var(--text3)">${o.date}</td>
+    </tr>
+  `).join('');
+}
+
+// ═══════════════ SEASONAL ═══════════════
+let activeSeason='festive';
+let seasonChart1=null,seasonChart2=null;
+function initSeasonal(){
+  const seasons=Object.keys(DB.seasons);
+  document.getElementById('seasonPills').innerHTML=seasons.map(s=>`
+    <div class="season-pill ${s===activeSeason?'active':''}" onclick="selectSeason('${s}',this)">${DB.seasons[s].label}</div>
+  `).join('');
+  renderSeasonData(activeSeason);
+}
+function selectSeason(key,el){
+  activeSeason=key;
+  document.querySelectorAll('.season-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  if(seasonChart1){seasonChart1.destroy();seasonChart1=null;}
+  if(seasonChart2){seasonChart2.destroy();seasonChart2=null;}
+  renderSeasonData(key);
+}
+function renderSeasonData(key){
+  const s=DB.seasons[key];
+  document.getElementById('seasonName').textContent=s.label;
+  const kpiLabels=['Season GMV','GMV Growth','Avg Delivery','Return Rate'];
+  const kpiColors=['var(--accent2)','var(--green)','var(--amber)','var(--red)'];
+  document.getElementById('seasonKpis').innerHTML=s.kpis.map((v,i)=>`
+    <div class="kpi-card" xstyle="border-color:var(--border)">
+      <div class="kpi-label">${kpiLabels[i]}</div>
+      <div class="kpi-value" xstyle="color:${kpiColors[i]}">${v}</div>
+    </div>
+  `).join('');
+
+  const ctx1=document.getElementById('seasonGmvChart').getContext('2d');
+  seasonChart1=new Chart(ctx1,{type:'bar',data:{labels:s.months,datasets:[{label:'GMV (Cr)',data:s.gmv,backgroundColor:['#3b82f6','#8b5cf6','#10b981'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b'}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',callback:v=>'₹'+v+'Cr'}}}}});
+
+  const ctx2=document.getElementById('seasonCatChart').getContext('2d');
+  const cats=Object.keys(s.cats);
+  const colors=['#ff3e6c','#3b82f6','#fc2779','#14b8a6','#f59e0b'];
+  seasonChart2=new Chart(ctx2,{type:'doughnut',data:{labels:cats,datasets:[{data:Object.values(s.cats),backgroundColor:colors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:10},boxWidth:8}}}}});
+
+  document.getElementById('seasonProductsBody').innerHTML=s.top.map(p=>`
+    <tr>
+      <td class="bold">${p.p}</td>
+      <td>${companyBadge(p.pl)}</td>
+      <td><span class="badge badge-blue">${p.cat}</span></td>
+      <td>${p.units.toLocaleString('en-IN')}</td>
+      <td class="bold" xstyle="color:var(--accent2)">${p.rev}</td>
+      <td><span class="badge badge-green">${p.growth}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ═══════════════ OFFERS ═══════════════
+function initOffers(){
+  const ctx=(id)=>document.getElementById(id).getContext('2d');
+  charts.offers={};
+  charts.offers.discount=new Chart(ctx('discountChart'),{
+    type:'bar',data:{labels:DB.companies.map(c=>c.name),datasets:[{label:'Avg Discount %',data:[28,32,46,38,42,24],backgroundColor:DB.companies.map(c=>c.color+'cc'),borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'}}}}
+  });
+  const types=['Flash Sale','BOGO','Clearance','Bank Offer','Brand Sale','Subscription'];
+  const typeColors=['#ef4444','#f59e0b','#8b5cf6','#3b82f6','#10b981','#ec4899'];
+  charts.offers.type=new Chart(ctx('offerTypeChart'),{
+    type:'doughnut',data:{labels:types,datasets:[{data:[34,12,22,18,8,6],backgroundColor:typeColors,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'65%',plugins:{legend:{display:false}}}
+  });
+  document.getElementById('offerTypeLegend').innerHTML=types.map((t,i)=>`
+    <li class="legend-item"><div class="legend-dot" xstyle="background:${typeColors[i]}"></div>${t}<span class="legend-val">${[34,12,22,18,8,6][i]}%</span></li>
+  `).join('');
+
+  document.getElementById('offersList').innerHTML=DB.offers.map(o=>`
+    <div class="offer-row">
+      <div class="offer-badge" xstyle="background:rgba(255,255,255,.05)">${o.emoji}</div>
+      <div class="offer-info">
+        <div class="offer-title">${o.title}</div>
+        <div class="offer-meta">${o.platform} · ${o.type} · ${o.expiry} · ${o.uses.toLocaleString('en-IN')} uses</div>
+      </div>
+      <div class="offer-discount">${o.discount}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════ PAYMENTS ═══════════════
+function initPayments(){
+  document.getElementById('paymentMethodsList').innerHTML=DB.paymentMethods.map(m=>`
+    <div class="payment-method-card" xstyle="margin-bottom:10px">
+      <div class="pm-icon" xstyle="background:${m.bg}">${m.icon}</div>
+      <div><div class="pm-name">${m.name}</div><div class="pm-count">${m.count} transactions</div></div>
+      <div class="pm-amount"><div class="val">${m.amount}</div><div class="pct">${m.pct}</div></div>
+    </div>
+  `).join('');
+
+  const ctx=(id)=>document.getElementById(id).getContext('2d');
+  const months=['Nov','Dec','Jan','Feb','Mar','Apr'];
+  charts.payments={};
+  charts.payments.success=new Chart(ctx('paymentSuccessChart'),{
+    type:'line',data:{labels:months,datasets:[
+      {label:'UPI',data:[94.2,96.1,97.4,97.8,97.2,97.8],borderColor:'#3b82f6',tension:.4,fill:false,pointRadius:3},
+      {label:'Card',data:[95.8,96.4,97.1,97.6,97.2,97.4],borderColor:'#10b981',tension:.4,fill:false,pointRadius:3},
+      {label:'COD',data:[92.1,91.4,93.2,94.8,94.2,94.6],borderColor:'#f59e0b',tension:.4,fill:false,pointRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'},min:90,max:100}}}
+  });
+
+  document.getElementById('paymentSummaryBody').innerHTML=DB.companies.map(c=>`
+    <tr>
+      <td>${companyBadge(c.name)}</td>
+      <td class="bold">${(c.orders/1000).toFixed(1)}K</td>
+      <td>${Math.floor(c.orders*.42).toLocaleString('en-IN')}</td>
+      <td>${Math.floor(c.orders*.26).toLocaleString('en-IN')}</td>
+      <td>${Math.floor(c.orders*.19).toLocaleString('en-IN')}</td>
+      <td>${Math.floor(c.orders*.13).toLocaleString('en-IN')}</td>
+      <td><span class="badge badge-green">${c.paySuccess}%</span></td>
+      <td class="bold">₹${c.aov.toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+}
+
+// ═══════════════ COMPARE ═══════════════
+function initCompare(){
+  buildCompareTable();
+  buildCompareCharts();
+}
+function buildCompareTable(){
+  const companies=DB.companies;
+  document.getElementById('compareHeaderRow').innerHTML=`
+    <div class="compare-company" xstyle="background:var(--bg3)"><div xstyle="font-size:11px;color:var(--text3);text-transform:uppercase">Metric</div></div>
+    ${companies.map(c=>`
+      <div class="compare-company" xstyle="background:${c.color}10;border-left:1px solid var(--border)">
+        <div class="compare-logo-sm" xstyle="background:${c.color}">${c.logo}</div>
+        <div xstyle="font-size:12px;font-weight:700">${c.name}</div>
+      </div>
+    `).join('')}
+  `;
+  const metrics=[
+    {label:'GMV (MTD)',vals:companies.map(c=>c.gmv)},
+    {label:'Market Share',vals:companies.map(c=>c.share+'%')},
+    {label:'Total Orders',vals:companies.map(c=>(c.orders/1000).toFixed(1)+'K')},
+    {label:'Avg Order Value',vals:companies.map(c=>'₹'+c.aov.toLocaleString('en-IN'))},
+    {label:'Return Rate',vals:companies.map(c=>c.returnRate+'%'),highlight:true,higher:'red'},
+    {label:'Customer Rating',vals:companies.map(c=>c.rating+'⭐'),highlight:true,higher:'green'},
+    {label:'Products Listed',vals:companies.map(c=>c.products.toLocaleString('en-IN'))},
+    {label:'YoY Growth',vals:companies.map(c=>'+'+c.growth+'%'),highlight:true,higher:'green'},
+    {label:'Pay Success',vals:companies.map(c=>c.paySuccess+'%'),highlight:true,higher:'green'},
+  ];
+  document.getElementById('compareBodyRows').innerHTML=metrics.map(m=>`
+    <div class="compare-row">
+      <div class="compare-label">${m.label}</div>
+      ${m.vals.map((v,i)=>{
+        let style='';
+        if(m.highlight){
+          const maxIdx=m.vals.reduce((best,cur,ci)=>Number.parseFloat(cur)>Number.parseFloat(m.vals[best])?ci:best,0);
+          if(i===maxIdx) style=m.higher==='green'?'color:var(--green)':'color:var(--red)';
+        }
+        return `<div class="compare-val" xstyle="${style}">${v}</div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+function buildCompareCharts(){
+  const ctx=(id)=>document.getElementById(id)?.getContext('2d');
+  charts.compare={};
+  const companies=DB.companies;
+
+  if(ctx('compareGmvChart'))
+    charts.compare.gmv=new Chart(ctx('compareGmvChart'),{
+      type:'bar',data:{labels:['2019','2020','2021','2022','2023','2024'],datasets:companies.map(c=>({label:c.name,data:c.yearlyGmv,backgroundColor:c.color+'bb',borderRadius:4}))},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{x:{grid:{display:false},ticks:{color:'#64748b'}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',callback:v=>'₹'+v+'Cr'}}}}
+    });
+
+  if(ctx('compareGrowthChart'))
+    charts.compare.growth=new Chart(ctx('compareGrowthChart'),{
+      type:'bar',data:{labels:companies.map(c=>c.name),datasets:[{label:'YoY Growth %',data:companies.map(c=>c.growth),backgroundColor:companies.map(c=>c.color+'cc'),borderRadius:6}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',callback:v=>v+'%'}}}}
+    });
+
+  if(ctx('compareProductChart'))
+    charts.compare.products=new Chart(ctx('compareProductChart'),{
+      type:'bar',data:{labels:companies.map(c=>c.name),datasets:[
+        {label:'Products Listed',data:companies.map(c=>c.products),backgroundColor:companies.map(c=>c.color+'88'),yAxisID:'y',borderRadius:4},
+        {label:'Avg Order Value (₹)',data:companies.map(c=>c.aov),backgroundColor:companies.map(c=>c.color),type:'line',borderColor:companies.map(c=>c.color)[0],yAxisID:'y1',tension:.4},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{x:{grid:{display:false},ticks:{color:'#64748b'}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b'},title:{display:true,text:'Products',color:'#64748b'}},y1:{position:'right',grid:{display:false},ticks:{color:'#64748b',callback:v=>'₹'+v},title:{display:true,text:'AOV',color:'#64748b'}}}}
+    });
+
+  if(ctx('compareRadarChart'))
+    charts.compare.radar=new Chart(ctx('compareRadarChart'),{
+      type:'radar',
+      data:{
+        labels:['Delivery','Quality','Pricing','Support','Variety'],
+        datasets:companies.map(c=>({label:c.name,data:Object.values(c.satisfaction),borderColor:c.color,backgroundColor:c.color+'22',pointBackgroundColor:c.color,borderWidth:2,pointRadius:3}))
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{r:{grid:{color:'rgba(255,255,255,.08)'},angleLines:{color:'rgba(255,255,255,.08)'},ticks:{color:'#64748b',backdropColor:'transparent',font:{size:9}},pointLabels:{color:'#94a3b8',font:{size:11}},min:60,max:100}}}
+    });
+}
+
+let activeCompareTab='overview';
+function switchCompareTab(tab,el){
+  activeCompareTab=tab;
+  document.querySelectorAll('#compareTabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['overview','revenue','products','satisfaction'].forEach(t=>{
+    const el2=document.getElementById('compare'+t.charAt(0).toUpperCase()+t.slice(1));
+    if(el2) el2.classList.toggle('hidden',t!==tab);
+  });
+  if(tab!=='overview'&&!charts.compare){buildCompareCharts();}
+}
+
+// ═══════════════ HELPERS ═══════════════
+function companyBadge(name){
+  const c=DB.companies.find(x=>x.name===name)||{color:'#3b82f6',logo:'🏪'};
+  return `<span xstyle="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;background:${c.color}18;color:${c.color}">${c.logo} ${name}</span>`;
+}
+function statusBadge(s){
+  const m={Delivered:'badge-green',Cancelled:'badge-red','In Transit':'badge-amber',Returned:'badge-purple'};
+  return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
+}
+
+function hydrateXStyles(root){
+  if(!root) return;
+  const targets=[];
+  if(root.nodeType===Node.ELEMENT_NODE && root.hasAttribute('xstyle')){
+    targets.push(root);
+  }
+  if(root.querySelectorAll){
+    root.querySelectorAll('[xstyle]').forEach(el=>targets.push(el));
+  }
+  targets.forEach(el=>{
+    const css=el.getAttribute('xstyle');
+    if(css===null) return;
+    el.setAttribute('style',css);
+    el.removeAttribute('xstyle');
+  });
+}
+
+function initXStyleHydration(){
+  hydrateXStyles(document);
+  const observer=new MutationObserver(mutations=>{
+    mutations.forEach(mutation=>{
+      mutation.addedNodes.forEach(node=>{
+        if(node.nodeType===Node.ELEMENT_NODE){
+          hydrateXStyles(node);
+        }
+      });
+    });
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+}
+
+function verifyChartRuntime(){
+  if(typeof Chart==='undefined'){
+    console.error('Chart.js is not loaded. Check network/CDN access.');
+    return false;
+  }
+  return true;
+}
+
+function ensureChartRuntime(){
+  if(typeof Chart!=='undefined'){
+    return Promise.resolve(true);
+  }
+
+  return new Promise(resolve=>{
+    const fallbackScript=document.createElement('script');
+    fallbackScript.src='https://unpkg.com/chart.js@4.4.0/dist/chart.umd.min.js';
+    fallbackScript.async=true;
+    fallbackScript.onload=()=>resolve(typeof Chart!=='undefined');
+    fallbackScript.onerror=()=>resolve(false);
+    document.head.appendChild(fallbackScript);
+  });
+}
+
+initXStyleHydration();
+
+async function initApp(){
+  initTicker();
+  const runtimeReady=verifyChartRuntime()||await ensureChartRuntime();
+  if(runtimeReady){
+    initDashboard();
+  }else{
+    console.error('Charts could not be initialized because Chart.js failed to load.');
+  }
+}
+</script>
+</body>
+</html>

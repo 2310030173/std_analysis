@@ -1,0 +1,51 @@
+{
+  "customers": [
+    "Aarav Sharma",
+    "Ishita Reddy",
+    "Vivaan Mehta",
+    "Saanvi Iyer",
+    "Aditya Verma",
+    "Ananya Nair",
+    "Rohan Gupta",
+    "Diya Menon",
+    "Kabir Bansal",
+    "Meera Joshi",
+    "Arjun Patel",
+    "Riya Kapoor",
+    "Siddharth Rao",
+    "Priya Kulkarni",
+    "Kunal Singh",
+    "Sneha Mishra",
+    "Dev Malhotra",
+    "Nitya Das",
+    "Harsh Vora",
+    "Lavanya Krishnan"
+  ],
+  "addresses": [
+    "21 Lakeview Residency, Bengaluru",
+    "88 Palm Grove Avenue, Hyderabad",
+    "45 Riverfront Heights, Pune",
+    "12 Green Valley Layout, Chennai",
+    "77 Sapphire Enclave, Mumbai",
+    "33 Harmony Apartments, Ahmedabad",
+    "91 Sunrise Colony, Delhi",
+    "14 Metro Park Road, Kolkata",
+    "29 Orchid Meadows, Jaipur",
+    "62 Skyline Residency, Kochi"
+  ],
+  "paymentMethods": [
+    "UPI",
+    "Credit Card",
+    "Debit Card",
+    "Net Banking",
+    "Wallet",
+    "Cash on Delivery"
+  ],
+  "summaryTags": [
+    "Paid in full",
+    "Paid via secure checkout",
+    "Auto-captured transaction",
+    "Split payment completed",
+    "Successful instant transfer"
+  ]
+}

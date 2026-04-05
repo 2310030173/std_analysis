@@ -1,0 +1,26 @@
+[
+  {
+    "id": "amazon-premium-mouse-001",
+    "name": "Wireless Ergonomic Mouse",
+    "category": "Computers & Accessories",
+    "brand": "PrimeTech",
+    "companyId": "amazon",
+    "price": 2499,
+    "rating": 4.4,
+    "margin": 0.19,
+    "imageUrl": "https://images.unsplash.com/photo-1527814050087-3793815479db",
+    "imageQuery": "wireless ergonomic mouse"
+  },
+  {
+    "id": "flipkart-slim-smartphone-001",
+    "name": "Slim 5G Smartphone",
+    "category": "Mobiles",
+    "brand": "VoltMobile",
+    "companyId": "flipkart",
+    "price": 21999,
+    "rating": 4.2,
+    "margin": 0.14,
+    "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+    "imageQuery": "5g smartphone"
+  }
+]

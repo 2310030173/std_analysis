@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Data Analysis | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <h1 class="login-title">Store Data Analysis</h1>
+    <p class="login-subtitle">Sign in to access the enterprise e-commerce analytics platform.</p>
+
+    <form id="login-form">
+      <div class="form-row">
+        <label for="email">Email</label>
+        <input class="input" id="email" type="email" placeholder="2310030173@klh.edu.in" required />
+      </div>
+
+      <div class="form-row">
+        <label for="password">Password</label>
+        <input class="input" id="password" type="password" placeholder="Enter password" required />
+      </div>
+
+      <button class="btn primary block" type="submit">Login</button>
+    </form>
+  </main>
+
+  <div id="global-spinner" class="spinner-overlay hidden" aria-live="polite" aria-label="Loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div id="toast-stack" class="toast-stack"></div>
+
+  <script type="module" src="./js/pages/loginPage.js"></script>
+</body>
+</html>

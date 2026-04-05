@@ -1,0 +1,50 @@
+[
+  {
+    "id": "amazon",
+    "name": "Amazon",
+    "color": "#ff9900",
+    "headquarters": "Bengaluru",
+    "description": "Large-scale marketplace with strong logistics and broad category depth.",
+    "branches": ["Bengaluru Central", "Hyderabad Hub", "Chennai South", "Delhi NCR North", "Pune East"]
+  },
+  {
+    "id": "flipkart",
+    "name": "Flipkart",
+    "color": "#2874f0",
+    "headquarters": "Bengaluru",
+    "description": "High-volume domestic platform with competitive pricing and category promotions.",
+    "branches": ["Bengaluru Whitefield", "Mumbai West", "Kolkata Central", "Ahmedabad North", "Jaipur City"]
+  },
+  {
+    "id": "myntra",
+    "name": "Myntra",
+    "color": "#ff3f6c",
+    "headquarters": "Bengaluru",
+    "description": "Fashion-first commerce platform with seasonal style-led demand cycles.",
+    "branches": ["Bengaluru Fashion Park", "Delhi Style Hub", "Mumbai Premium Zone", "Chandigarh Fashion Mile"]
+  },
+  {
+    "id": "ajio",
+    "name": "Ajio",
+    "color": "#111827",
+    "headquarters": "Mumbai",
+    "description": "Curated fashion and lifestyle catalogue with value-premium mix.",
+    "branches": ["Mumbai South", "Bengaluru Lifestyle Hub", "Surat Fashion Line", "Lucknow Trend Point"]
+  },
+  {
+    "id": "nykaa",
+    "name": "Nykaa",
+    "color": "#ec4899",
+    "headquarters": "Mumbai",
+    "description": "Beauty and personal care commerce platform with high repeat purchase behavior.",
+    "branches": ["Mumbai Beauty Central", "Delhi Glam Hub", "Bengaluru Care Studio", "Kochi Wellness Point"]
+  },
+  {
+    "id": "meesho",
+    "name": "Meesho",
+    "color": "#7c3aed",
+    "headquarters": "Bengaluru",
+    "description": "Value-focused social commerce channel with rapid catalog rotation.",
+    "branches": ["Bengaluru Social Commerce Hub", "Indore Value Center", "Patna Seller Point", "Nagpur Regional Node"]
+  }
+]

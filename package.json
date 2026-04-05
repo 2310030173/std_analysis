@@ -1,0 +1,12 @@
+{
+  "name": "store-data-analysis-netlify",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "npm --prefix backend install"
+  },
+  "dependencies": {
+    "serverless-http": "^3.2.0"
+  }
+}
