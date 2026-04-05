@@ -30,7 +30,7 @@ const paymentProfiles = readJson("paymentProfiles.json");
 const imageOverrides = readJsonOptional("productImages.json", {});
 const customProductsRaw = readJsonOptional("customProducts.json", []);
 
-const defaultCategoryTaxonomy = [
+const defaultCategoryTaxonomy = new Set([
   "Electronics",
   "Computers & Accessories",
   "Mobiles",
@@ -55,7 +55,7 @@ const defaultCategoryTaxonomy = [
   "Tools & Home Improvement",
   "Furniture",
   "Musical Instruments"
-];
+]);
 
 const companyDemandFactor = {
   amazon: 1.23,
@@ -514,7 +514,7 @@ function resolvePreferredSeason({ category, subcategory, productName }) {
 
 function resolveTopCategory(explicitCategory, sourceCategory, productName = "") {
   const explicit = String(explicitCategory || "").trim();
-  if (explicit && defaultCategoryTaxonomy.includes(explicit)) {
+  if (explicit && defaultCategoryTaxonomy.has(explicit)) {
     return explicit;
   }
 
@@ -524,7 +524,7 @@ function resolveTopCategory(explicitCategory, sourceCategory, productName = "") 
     return explicitSubcategoryCategoryMap[sourceLower];
   }
 
-  if (source && defaultCategoryTaxonomy.includes(source)) {
+  if (source && defaultCategoryTaxonomy.has(source)) {
     return source;
   }
 
@@ -546,15 +546,189 @@ function deriveCategoryTaxonomy(productRows) {
   );
 
   if (!categories.size) {
-    return [...defaultCategoryTaxonomy];
+    return [];
   }
 
   return [...categories].sort((a, b) => a.localeCompare(b));
 }
 
-function fallbackUnsplashUrl(query) {
-  const seed = tokenToSlug(query) || "product-image";
-  return `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/900`;
+const imageKeywordRules = [
+  {
+    keywords: ["smartphone", "mobile", "phone", "iphone"],
+    tags: ["smartphone", "mobile", "technology"]
+  },
+  {
+    keywords: ["earbud", "headphone", "speaker", "audio", "soundbar"],
+    tags: ["headphones", "audio", "electronics"]
+  },
+  {
+    keywords: ["laptop", "notebook", "computer", "pc", "tablet"],
+    tags: ["laptop", "computer", "technology"]
+  },
+  {
+    keywords: ["shirt", "t-shirt", "jeans", "kurta", "saree", "dress", "hoodie", "jacket", "fashion"],
+    tags: ["fashion", "clothing", "apparel"]
+  },
+  {
+    keywords: ["shoe", "sneaker", "sandal", "boot"],
+    tags: ["shoes", "footwear", "fashion"]
+  },
+  {
+    keywords: ["watch", "chronograph", "smartwatch"],
+    tags: ["watch", "wristwatch", "accessories"]
+  },
+  {
+    keywords: ["bag", "backpack", "luggage", "tote", "wallet"],
+    tags: ["bag", "backpack", "travel"]
+  },
+  {
+    keywords: ["serum", "lipstick", "perfume", "makeup", "cosmetic", "beauty", "sunscreen"],
+    tags: ["cosmetics", "beauty", "skincare"]
+  },
+  {
+    keywords: ["toothbrush", "health", "grooming", "wellness"],
+    tags: ["health", "personal-care", "wellness"]
+  },
+  {
+    keywords: ["air fryer", "kitchen", "cookware", "mixer", "appliance", "furniture", "desk", "chair"],
+    tags: ["home", "kitchen", "appliance"]
+  },
+  {
+    keywords: ["coffee", "tea", "snack", "grocery", "food"],
+    tags: ["grocery", "food", "packaging"]
+  },
+  {
+    keywords: ["book", "novel", "magazine"],
+    tags: ["book", "reading", "education"]
+  },
+  {
+    keywords: ["toy", "game", "puzzle", "block", "lego"],
+    tags: ["toys", "game", "kids"]
+  },
+  {
+    keywords: ["baby", "diaper", "stroller", "feeding"],
+    tags: ["baby", "newborn", "care"]
+  },
+  {
+    keywords: ["fitness", "sports", "yoga", "gym", "dumbbell", "band"],
+    tags: ["fitness", "sports", "workout"]
+  },
+  {
+    keywords: ["car", "bike", "motorbike", "dashboard", "helmet", "automotive"],
+    tags: ["car", "automotive", "vehicle"]
+  },
+  {
+    keywords: ["pet", "dog", "cat", "grooming"],
+    tags: ["pet", "dog", "cat"]
+  },
+  {
+    keywords: ["keyboard", "mouse", "office", "stationery", "printer"],
+    tags: ["office", "workspace", "stationery"]
+  },
+  {
+    keywords: ["drill", "tool", "hardware", "improvement"],
+    tags: ["tools", "hardware", "workshop"]
+  },
+  {
+    keywords: ["piano", "keyboard instrument", "guitar", "musical"],
+    tags: ["music", "instrument", "piano"]
+  }
+];
+
+const categoryImageTags = {
+  "Electronics": ["electronics", "gadgets", "technology"],
+  "Computers & Accessories": ["computer", "laptop", "technology"],
+  "Mobiles": ["smartphone", "mobile", "technology"],
+  "Clothing & Accessories": ["fashion", "clothing", "apparel"],
+  "Fashion": ["fashion", "clothing", "style"],
+  "Shoes & Handbags": ["fashion", "footwear", "handbag"],
+  "Beauty": ["beauty", "cosmetics", "skincare"],
+  "Health & Personal Care": ["health", "personal-care", "wellness"],
+  "Home & Kitchen": ["home", "kitchen", "appliance"],
+  "Grocery & Gourmet Foods": ["grocery", "food", "packaging"],
+  "Books": ["book", "reading", "education"],
+  "Toys & Games": ["toys", "game", "kids"],
+  "Baby": ["baby", "newborn", "care"],
+  "Sports, Fitness & Outdoors": ["fitness", "sports", "workout"],
+  "Car & Motorbike": ["car", "automotive", "vehicle"],
+  "Pet Supplies": ["pet", "dog", "cat"],
+  "Office Products": ["office", "workspace", "stationery"],
+  "Jewellery": ["jewelry", "necklace", "accessories"],
+  "Watches": ["watch", "wristwatch", "accessories"],
+  "Luggage & Bags": ["bag", "travel", "luggage"],
+  "Video Games": ["gaming", "controller", "console"],
+  "Tools & Home Improvement": ["tools", "hardware", "workshop"],
+  "Furniture": ["furniture", "home", "interior"],
+  "Musical Instruments": ["music", "instrument", "piano"]
+};
+
+const lowRelevanceStockImageHosts = ["source.unsplash.com", "picsum.photos"];
+
+function selectImageTags(queryText, categoryText) {
+  const text = normalizeProductToken(`${queryText || ""} ${categoryText || ""}`);
+  for (const rule of imageKeywordRules) {
+    if (rule.keywords.some((keyword) => text.includes(keyword))) {
+      return [...rule.tags];
+    }
+  }
+
+  const exactCategory = String(categoryText || "").trim();
+  if (exactCategory && categoryImageTags[exactCategory]) {
+    return [...categoryImageTags[exactCategory]];
+  }
+
+  return ["product", "shopping", "ecommerce"];
+}
+
+function buildKeywordImageUrl({ query = "", category = "", subcategory = "", productName = "", brand = "", slug = "" }) {
+  const combinedText = [query, productName, brand, subcategory, category, slug]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .join(" ");
+
+  const tags = selectImageTags(combinedText, category);
+  const lockSeed = tokenToSlug(combinedText) || tokenToSlug(`${category} ${subcategory}`) || "product-image";
+  const lock = Math.floor(hashToUnit(lockSeed) * 999) + 1;
+  const tagPath = tags
+    .slice(0, 3)
+    .map((tag) => encodeURIComponent(tag))
+    .join(",");
+
+  return `https://loremflickr.com/1200/900/${tagPath}?lock=${lock}`;
+}
+
+function shouldKeepProvidedImageUrl(urlText) {
+  const text = String(urlText || "").trim();
+  if (!text) {
+    return false;
+  }
+
+  if (text.startsWith("./assets/") || text.startsWith("/assets/")) {
+    return true;
+  }
+
+  if (!text.includes("://")) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(text);
+    const host = String(parsed.hostname || "").toLowerCase();
+    return !lowRelevanceStockImageHosts.some((candidateHost) => host.includes(candidateHost));
+  } catch {
+    return false;
+  }
+}
+
+function fallbackUnsplashUrl(query, context = {}) {
+  return buildKeywordImageUrl({
+    query,
+    category: context.category,
+    subcategory: context.subcategory,
+    productName: context.productName,
+    brand: context.brand,
+    slug: context.slug
+  });
 }
 
 function clamp(value, min, max) {
@@ -664,8 +838,7 @@ function normalizeCustomProducts(items) {
         .replaceAll(/(^-|-$)/g, "");
 
       const sourceCategory = String(item.sourceCategory || item.subcategory || item.category || "General").trim();
-      const explicitCategory = String(item.topCategory || item.categoryBucket || item.category || "").trim();
-      const category = resolveTopCategory(explicitCategory, sourceCategory, baseName);
+      const category = String(item.category || sourceCategory || "General").trim() || "General";
       const numericPrice = Number(item.price);
       const numericRating = Number(item.rating);
       const numericMargin = Number(item.margin);
@@ -681,6 +854,16 @@ function normalizeCustomProducts(items) {
       const seasonId = ["summer", "monsoon", "winter", "festive", "spring"].includes(preferredSeason)
         ? preferredSeason
         : resolvePreferredSeason({ category, subcategory: sourceCategory, productName: baseName });
+      const brandText = String(item.brand || `${company.name} Brand`).trim();
+      const overrideImageUrl = String(imageOverrides[fallbackSlug] || "").trim();
+      const generatedImageUrl = fallbackUnsplashUrl(imageQuery || baseName, {
+        category,
+        subcategory: sourceCategory,
+        productName: baseName,
+        brand: brandText,
+        slug: fallbackSlug
+      });
+      const resolvedImageUrl = imageUrl || overrideImageUrl || generatedImageUrl;
 
       return {
         id: String(item.id || fallbackId),
@@ -690,14 +873,14 @@ function normalizeCustomProducts(items) {
         category,
         subcategory: sourceCategory,
         sourceCategory,
-        brand: String(item.brand || `${company.name} Brand`).trim(),
+        brand: brandText,
         companyId: company.id,
         sourceCompany: company.name,
         price: Number.isFinite(numericPrice) && numericPrice > 0 ? Math.round(numericPrice) : 999,
         rating: Number.isFinite(numericRating) ? clamp(numericRating, 1, 5) : 4.1,
         margin: Number.isFinite(numericMargin) ? clamp(numericMargin, 0.06, 0.55) : 0.18,
         imageQuery: imageQuery || baseName,
-        imageUrl: imageOverrides[fallbackSlug] || imageUrl || fallbackUnsplashUrl(baseName),
+        imageUrl: resolvedImageUrl,
         model: String(item.model || "").trim(),
         color: String(item.color || "").trim(),
         spec: String(item.spec || "").trim(),
@@ -755,7 +938,15 @@ function buildSeasonalExampleProduct(company, season, exampleName, nameToken) {
     rating,
     margin,
     imageQuery: `${exampleName} ${season.label} product`,
-    imageUrl: imageOverrides[slug] || fallbackUnsplashUrl(`${exampleName} product`),
+    imageUrl:
+      imageOverrides[slug] ||
+      fallbackUnsplashUrl(`${exampleName} product`, {
+        category,
+        subcategory: exampleName,
+        productName: exampleName,
+        brand: `${company.name} Seasonal`,
+        slug
+      }),
     model: "",
     color: "",
     spec: `${season.label} bestseller`,
@@ -854,7 +1045,13 @@ function ensureDistinctImageLinksByProductName(rows) {
     const nameToken = normalizeProductToken(item.name) || `product-${index + 1}`;
     const slug = String(item.slug || tokenToSlug(item.name) || `product-${index + 1}`).trim();
 
-    const baseFallbackUrl = fallbackUnsplashUrl(`${item.name || "product"} ${item.category || ""} ${slug}`);
+    const baseFallbackUrl = fallbackUnsplashUrl(`${item.name || "product"} ${item.category || ""} ${slug}`, {
+      category: item.category,
+      subcategory: item.subcategory || item.sourceCategory,
+      productName: item.name,
+      brand: item.brand,
+      slug
+    });
 
     let resolvedUrl = currentUrl;
     if (!resolvedUrl || isSourceUnsplash(resolvedUrl)) {
@@ -903,7 +1100,13 @@ function ensureDistinctImageLinksByProductName(rows) {
 
       let candidateKey = buildImageIdentityKey(candidateUrl);
       if (imageOwnerByKey.has(candidateKey) && imageOwnerByKey.get(candidateKey) !== nameToken) {
-        candidateUrl = fallbackUnsplashUrl(`${item.name || "product"} ${item.category || ""} ${slug} alt ${index + 1}`);
+        candidateUrl = fallbackUnsplashUrl(`${item.name || "product"} ${item.category || ""} ${slug} alt ${index + 1}`, {
+          category: item.category,
+          subcategory: item.subcategory || item.sourceCategory,
+          productName: item.name,
+          brand: item.brand,
+          slug
+        });
         candidateKey = buildImageIdentityKey(candidateUrl);
       }
 
@@ -944,7 +1147,15 @@ const generatedProducts = companies.flatMap((company) => {
       rating,
       margin,
       imageQuery: family.imageQuery,
-      imageUrl: imageOverrides[family.slug] || fallbackUnsplashUrl(family.imageQuery),
+      imageUrl:
+        imageOverrides[family.slug] ||
+        fallbackUnsplashUrl(family.imageQuery, {
+          category: family.category,
+          subcategory: family.name,
+          productName: family.name,
+          brand: `${family.brand} ${company.name}`,
+          slug: family.slug
+        }),
       model: "",
       color: "",
       spec: "",
@@ -961,10 +1172,13 @@ const generatedProducts = companies.flatMap((company) => {
 });
 
 const customProducts = normalizeCustomProducts(customProductsRaw);
-const seasonalReadyProducts = ensureSeasonalExampleProducts(customProducts.length ? customProducts : generatedProducts);
-const products = ensureDistinctImageLinksByProductName(seasonalReadyProducts);
+const baseProducts = customProducts.length ? customProducts : generatedProducts;
+const seasonalReadyProducts = customProducts.length ? baseProducts : ensureSeasonalExampleProducts(baseProducts);
+const products = customProducts.length
+  ? seasonalReadyProducts
+  : ensureDistinctImageLinksByProductName(seasonalReadyProducts);
 const categoryTaxonomy = deriveCategoryTaxonomy(products);
-const productPool = products.length ? products : [fallbackProduct];
+const productPool = products;
 
 const dateAxis = getPastDateStrings(220);
 
@@ -1021,11 +1235,18 @@ function buildPhone(seed) {
 }
 
 const paymentOrders = companies.flatMap((company, companyIndex) => {
+  if (!productPool.length) {
+    return [];
+  }
+
   const companyProducts = productPool.filter((product) => product.companyId === company.id);
   const companyProductPool = companyProducts.length ? companyProducts : productPool;
 
   return Array.from({ length: 15 }, (_, idx) => {
-    const product = companyProductPool[(idx * 3 + companyIndex) % companyProductPool.length] || fallbackProduct;
+    const product = companyProductPool[(idx * 3 + companyIndex) % companyProductPool.length];
+    if (!product) {
+      return null;
+    }
     const customerName = paymentProfiles.customers[(idx + companyIndex) % paymentProfiles.customers.length];
     const address = paymentProfiles.addresses[(idx * 2 + companyIndex) % paymentProfiles.addresses.length];
     const paymentMethod = paymentProfiles.paymentMethods[(idx + companyIndex) % paymentProfiles.paymentMethods.length];
@@ -1051,7 +1272,7 @@ const paymentOrders = companies.flatMap((company, companyIndex) => {
       orderDate,
       paymentSummary
     };
-  });
+  }).filter(Boolean);
 });
 
 export function getCompanies() {

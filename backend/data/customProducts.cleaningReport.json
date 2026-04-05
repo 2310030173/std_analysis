@@ -1,0 +1,520 @@
+{
+  "sourcePath": "c:\\Users\\B KARTHIK\\Downloads\\shopzen_5000_products.html",
+  "generatedAt": "2026-04-05T17:38:39.771Z",
+  "sourceRows": 5000,
+  "normalizedRows": 5000,
+  "dedupe": {
+    "mode": "preserve-source-no-row-removal",
+    "groupedByNameAndImage": 4922,
+    "exactDuplicatesDetected": 0,
+    "meaningfulVariantsDetected": 154,
+    "exactDuplicatesRemoved": 0
+  },
+  "imageConflicts": {
+    "flaggedGroups": 105,
+    "sameNameImageGroups": 0,
+    "crossNameImageConflictGroups": 105,
+    "rowsUpdatedForCrossNameConflicts": 0,
+    "samples": [
+      {
+        "imageIdentity": "unsplash:photo-1590658268037-6bf12165a8df",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 36,
+        "sampleNames": [
+          "Samsung Active Navy True Wireless Earbuds",
+          "Boat Ultra Coral True Wireless Earbuds",
+          "Jabra Elite Arctic White True Wireless Earbuds",
+          "Samsung Sport Arctic White True Wireless Earbuds",
+          "Oppo Flex Black True Wireless Earbuds",
+          "Bose Sport Coral True Wireless Earbuds",
+          "Bose Ultra Rose Gold True Wireless Earbuds",
+          "Realme Lite White True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1608156639585-b3a032ef9689",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Apple Lite Midnight Blue True Wireless Earbuds",
+          "JBL Ultra Forest Green True Wireless Earbuds",
+          "Soundcore Elite Arctic White True Wireless Earbuds",
+          "Jabra Evo Navy True Wireless Earbuds",
+          "Nothing Studio Rose Gold True Wireless Earbuds",
+          "Apple Active Coral True Wireless Earbuds",
+          "Oppo Sport Arctic White True Wireless Earbuds",
+          "Apple Air Arctic White True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1606220945770-b5b6c2c55bf1",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 36,
+        "sampleNames": [
+          "Soundcore X2 Coral True Wireless Earbuds",
+          "Sony Flex Coral True Wireless Earbuds",
+          "Soundcore Z1 White True Wireless Earbuds",
+          "Sony Flex Arctic White True Wireless Earbuds",
+          "Apple Pro Max White True Wireless Earbuds",
+          "JBL Elite Rose Gold True Wireless Earbuds",
+          "Noise Neo Rose Gold True Wireless Earbuds",
+          "Bose Sport Midnight Blue True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1600294037681-c80b4cb5b434",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Realme Active White True Wireless Earbuds",
+          "OnePlus Elite Rose Gold True Wireless Earbuds",
+          "Apple X2 Rose Gold True Wireless Earbuds",
+          "Nothing X1 Black True Wireless Earbuds",
+          "Apple Plus Coral True Wireless Earbuds",
+          "Samsung Evo Coral True Wireless Earbuds",
+          "Oppo Flex Rose Gold True Wireless Earbuds",
+          "Oppo Evo Midnight Blue True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1631176093617-38b8c7c3ed38",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Anker Ultra Coral True Wireless Earbuds",
+          "JBL Studio Navy True Wireless Earbuds",
+          "Oppo Pro Max Black True Wireless Earbuds",
+          "Sony X1 Black True Wireless Earbuds",
+          "Jabra X1 Midnight Blue True Wireless Earbuds",
+          "Boat Ultra Arctic White True Wireless Earbuds",
+          "Realme X1 Midnight Blue True Wireless Earbuds",
+          "Nothing Lite Arctic White True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1583394838336-acd977736f90",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 35,
+        "sampleNames": [
+          "Sony Z1 Arctic White True Wireless Earbuds",
+          "Sony Air White True Wireless Earbuds",
+          "Soundcore Air Midnight Blue True Wireless Earbuds",
+          "Nothing Sport Rose Gold True Wireless Earbuds",
+          "Samsung Evo Coral True Wireless Earbuds",
+          "Bose Active Arctic White True Wireless Earbuds",
+          "OnePlus Studio Forest Green True Wireless Earbuds",
+          "Bose Air Midnight Blue True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1625948515291-69613efd103f",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 35,
+        "sampleNames": [
+          "Noise X1 Coral True Wireless Earbuds",
+          "Jabra X1 Midnight Blue True Wireless Earbuds",
+          "Soundcore X2 Black True Wireless Earbuds",
+          "JBL Air White True Wireless Earbuds",
+          "OnePlus Evo White True Wireless Earbuds",
+          "Soundcore X2 Midnight Blue True Wireless Earbuds",
+          "Bose X1 Arctic White True Wireless Earbuds",
+          "OnePlus Evo Black True Wireless Earbuds"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1585298723682-7115561c51b7",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 50,
+        "rows": 50,
+        "sampleNames": [
+          "Boat Flow White Neckband Earphones",
+          "OnePlus Bass Black Neckband Earphones",
+          "Boat Pro Black Neckband Earphones",
+          "Plantronics Arc Orange Neckband Earphones",
+          "Sony Pulse Orange Neckband Earphones",
+          "Boat Flex Purple Neckband Earphones",
+          "LG Curve Black Neckband Earphones",
+          "Skullcandy Arc Orange Neckband Earphones"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1484704849700-f032a568e944",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 47,
+        "rows": 50,
+        "sampleNames": [
+          "Motorola Pro Green Neckband Earphones",
+          "Jabra Band Green Neckband Earphones",
+          "Sony NeckFit Black Neckband Earphones",
+          "Skullcandy Chain White Neckband Earphones",
+          "Boat Rockerz Purple Neckband Earphones",
+          "Samsung Sonic Red Neckband Earphones",
+          "LG Sport Red Neckband Earphones",
+          "Noise Link Purple Neckband Earphones"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1546435770-a3e426bf472b",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 49,
+        "rows": 50,
+        "sampleNames": [
+          "LG Flow Black Neckband Earphones",
+          "Sony NeckFit Blue Neckband Earphones",
+          "Plantronics Bass Green Neckband Earphones",
+          "Noise Rockerz Orange Neckband Earphones",
+          "Mi Curve Orange Neckband Earphones",
+          "Skullcandy Chain Blue Neckband Earphones",
+          "Skullcandy Curve Blue Neckband Earphones",
+          "Sony Elite Purple Neckband Earphones"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1618366712010-f4ae9c647dcb",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 49,
+        "rows": 50,
+        "sampleNames": [
+          "Mi Curve Blue Neckband Earphones",
+          "Samsung Flow Orange Neckband Earphones",
+          "Realme Pro Purple Neckband Earphones",
+          "Sony Curve Red Neckband Earphones",
+          "JBL Flex Red Neckband Earphones",
+          "Oppo Band Yellow Neckband Earphones",
+          "Jabra NeckFit White Neckband Earphones",
+          "Sony Chain Blue Neckband Earphones"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1505740420928-5e560c06d30e",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 50,
+        "rows": 50,
+        "sampleNames": [
+          "JBL Link Black Neckband Earphones",
+          "OnePlus Chain Blue Neckband Earphones",
+          "Jabra Flow Red Neckband Earphones",
+          "Jabra Band Blue Neckband Earphones",
+          "Plantronics Flow Black Neckband Earphones",
+          "Samsung NeckFit Black Neckband Earphones",
+          "JBL Flow White Neckband Earphones",
+          "Sony Flex Purple Neckband Earphones"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1511707171634-5f897ff02aa9",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Google V Series Lavender Smartphone",
+          "Realme iPhone Aurora Smartphone",
+          "iQOO Pixel Lavender Smartphone",
+          "Tecno Reno Midnight Smartphone",
+          "Motorola V Series Aurora Smartphone",
+          "Oppo V Series Lavender Smartphone",
+          "Tecno Phone Prism Blue Smartphone",
+          "Google Redmi Midnight Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1592899677977-9c10ca588bbd",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Samsung Phone Starlight Smartphone",
+          "Tecno GT Starlight Smartphone",
+          "Lava Pixel Phantom Black Smartphone",
+          "Lava Redmi Midnight Smartphone",
+          "Realme Reno Phantom Black Smartphone",
+          "iQOO Redmi Aurora Smartphone",
+          "Lava X Series Midnight Smartphone",
+          "iQOO GT Starlight Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1580910051074-3eb694886505",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "iQOO G Series Aurora Smartphone",
+          "Realme Edge Lavender Smartphone",
+          "Lava G Series Lavender Smartphone",
+          "OnePlus Pro Aurora Smartphone",
+          "Google Pixel Lavender Smartphone",
+          "Motorola Reno Aurora Smartphone",
+          "Vivo Reno Graphite Smartphone",
+          "Xiaomi G Series Aurora Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1574944985070-8f3ebc6b79d2",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 36,
+        "sampleNames": [
+          "Lava Spark Lavender Smartphone",
+          "Nothing Galaxy Prism Blue Smartphone",
+          "Google Pixel Aurora Smartphone",
+          "Vivo G Series Glacier Smartphone",
+          "iQOO iPhone Graphite Smartphone",
+          "Motorola Edge Starlight Smartphone",
+          "Poco GT Glacier Smartphone",
+          "Nokia Reno Lavender Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1565849904461-04a58ad377e0",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 36,
+        "rows": 36,
+        "sampleNames": [
+          "Nothing Phone Aurora Smartphone",
+          "Poco Nord Prism Blue Smartphone",
+          "Oppo Pro Prism Blue Smartphone",
+          "iQOO Galaxy Graphite Smartphone",
+          "Nokia Phone Midnight Smartphone",
+          "Vivo Reno Phantom Black Smartphone",
+          "Motorola iPhone Aurora Smartphone",
+          "Nothing Pixel Starlight Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1530319067432-f2a729c03db5",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 35,
+        "rows": 35,
+        "sampleNames": [
+          "Motorola X Series Prism Blue Smartphone",
+          "Google GT Phantom Black Smartphone",
+          "Realme G Series Aurora Smartphone",
+          "Lava Pro Starlight Smartphone",
+          "Samsung Pro Graphite Smartphone",
+          "Samsung Phone Prism Blue Smartphone",
+          "Samsung Spark Phantom Black Smartphone",
+          "OnePlus Galaxy Graphite Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1567581935884-3349723552ca",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 34,
+        "rows": 35,
+        "sampleNames": [
+          "Vivo Edge Aurora Smartphone",
+          "Poco Phone Aurora Smartphone",
+          "Nothing Galaxy Graphite Smartphone",
+          "Samsung X Series Lavender Smartphone",
+          "Nokia G Series Lavender Smartphone",
+          "Oppo Spark Glacier Smartphone",
+          "Lava Nord Graphite Smartphone",
+          "Oppo Pixel Graphite Smartphone"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1523275335684-37898b6baf30",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 42,
+        "rows": 42,
+        "sampleNames": [
+          "Fire-Boltt Evolve Gold Smartwatch",
+          "Huawei Ultra Black Smartwatch",
+          "Realme Evolve White Smartwatch",
+          "Fitbit Vantage Red Smartwatch",
+          "OnePlus Evolve White Smartwatch",
+          "Amazfit Series White Smartwatch",
+          "Realme Fenix Silver Smartwatch",
+          "Titan Edge Silver Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1544117519-31a4b719223d",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 41,
+        "rows": 42,
+        "sampleNames": [
+          "Huawei Edge Green Smartwatch",
+          "Realme Fenix Red Smartwatch",
+          "Noise Evolve Blue Smartwatch",
+          "Amazfit Hybrid White Smartwatch",
+          "Fitbit Ultra Red Smartwatch",
+          "Apple Vantage Red Smartwatch",
+          "Amazfit Watch Black Smartwatch",
+          "Noise Hybrid White Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1551816230-ef5deaed4a26",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 41,
+        "rows": 42,
+        "sampleNames": [
+          "Amazfit GTR Blue Smartwatch",
+          "Amazfit Infinity Black Smartwatch",
+          "Skagen Hybrid Gold Smartwatch",
+          "Fire-Boltt Fenix Green Smartwatch",
+          "Titan Series Rose Gold Smartwatch",
+          "Apple GTR Silver Smartwatch",
+          "Mi Fenix White Smartwatch",
+          "Huawei Vantage Red Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1508685096489-7aacd43bd3b1",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 41,
+        "rows": 42,
+        "sampleNames": [
+          "Garmin Series Silver Smartwatch",
+          "Amazfit Edge Gold Smartwatch",
+          "Titan Pro White Smartwatch",
+          "Fossil Series White Smartwatch",
+          "Apple Vantage White Smartwatch",
+          "Fitbit Sense Blue Smartwatch",
+          "Titan Versa Blue Smartwatch",
+          "Samsung Ultra Blue Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1617043786394-f977fa12eddf",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 41,
+        "rows": 41,
+        "sampleNames": [
+          "Realme Infinity Green Smartwatch",
+          "Huawei Watch Blue Smartwatch",
+          "Fossil Fenix Red Smartwatch",
+          "Noise Vantage Black Smartwatch",
+          "Apple Fenix Blue Smartwatch",
+          "Fitbit Sense Rose Gold Smartwatch",
+          "Noise Edge Gold Smartwatch",
+          "Fossil Series Gold Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1542496658-e33a6d0d61e2",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 41,
+        "rows": 41,
+        "sampleNames": [
+          "Fire-Boltt Series Rose Gold Smartwatch",
+          "Apple Ultra Silver Smartwatch",
+          "Realme Versa Silver Smartwatch",
+          "Boat Edge Green Smartwatch",
+          "Skagen Sense Rose Gold Smartwatch",
+          "Apple Vantage Red Smartwatch",
+          "Fitbit GTR Gold Smartwatch",
+          "Mi Vantage Red Smartwatch"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1496181133206-80ce9b88a853",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 42,
+        "rows": 42,
+        "sampleNames": [
+          "Samsung Galaxy Red Laptop",
+          "Acer Aspire Silver Laptop",
+          "Apple VAIO Midnight Laptop",
+          "Acer MateBook Midnight Laptop",
+          "Asus VivoBook Black Laptop",
+          "HP Satellite Red Laptop",
+          "Microsoft Aspire White Laptop",
+          "Asus Satellite Gold Laptop"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1541807084-5c52b6b3adef",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 42,
+        "rows": 42,
+        "sampleNames": [
+          "Razer Inspiron Silver Laptop",
+          "Gigabyte MateBook Red Laptop",
+          "Lenovo MacBook Gold Laptop",
+          "Sony Inspiron Blue Laptop",
+          "Acer Inspiron Space Grey Laptop",
+          "Dell Galaxy Black Laptop",
+          "Lenovo Surface White Laptop",
+          "Apple VivoBook White Laptop"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1517336714731-489689fd1ca8",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 40,
+        "rows": 42,
+        "sampleNames": [
+          "Acer VivoBook Midnight Laptop",
+          "Microsoft Satellite Space Grey Laptop",
+          "Samsung VivoBook Midnight Laptop",
+          "Dell MacBook Gold Laptop",
+          "Lenovo MacBook Silver Laptop",
+          "Razer Gram Space Grey Laptop",
+          "Gigabyte Pavilion Blue Laptop",
+          "Asus Aspire Blue Laptop"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1593642632559-0c6d3fc62b89",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 40,
+        "rows": 42,
+        "sampleNames": [
+          "HP Prestige Gold Laptop",
+          "Sony Blade Black Laptop",
+          "Gigabyte Aero Gold Laptop",
+          "Gigabyte MateBook Midnight Laptop",
+          "Sony Galaxy Blue Laptop",
+          "Microsoft VAIO Silver Laptop",
+          "Asus Prestige Red Laptop",
+          "HP Blade Red Laptop"
+        ]
+      },
+      {
+        "imageIdentity": "unsplash:photo-1525547719571-a2d4ac8945e2",
+        "status": "cross-name-image-conflict-flagged",
+        "uniqueNames": 40,
+        "rows": 41,
+        "sampleNames": [
+          "Gigabyte Galaxy White Laptop",
+          "Asus Galaxy Midnight Laptop",
+          "Toshiba Satellite White Laptop",
+          "Huawei Inspiron Midnight Laptop",
+          "Acer Blade Silver Laptop",
+          "Acer Gram Midnight Laptop",
+          "MSI Surface Red Laptop",
+          "Asus VivoBook Blue Laptop"
+        ]
+      }
+    ]
+  },
+  "final": {
+    "products": 5000,
+    "categories": 20,
+    "subcategories": 20,
+    "companyDistribution": {
+      "amazon": 834,
+      "flipkart": 834,
+      "myntra": 833,
+      "ajio": 833,
+      "nykaa": 833,
+      "meesho": 833
+    }
+  },
+  "notes": [
+    "Source rows are preserved as uploaded; no deduplication row removal is applied.",
+    "Exact duplicate signatures are reported for review only.",
+    "If one image URL appears under different product names, conflict groups are flagged for review while preserving uploaded source image URLs.",
+    "Final rows are evenly distributed across Amazon, Flipkart, Myntra, Ajio, Nykaa, and Meesho."
+  ]
+}
